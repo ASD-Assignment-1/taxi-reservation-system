@@ -3,6 +3,25 @@ $primary-color: #007bff;
 $secondary-color: #ffffff;
 $box-shadow-color: rgba(0, 0, 0, 0.1);
 
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+
+    mat-icon {
+        margin-right: 8px;
+    }
+
+    /* Optional: Change hover effect */
+    &:hover {
+        background-color: rgba(255, 0, 0, 0.1);
+        /* Light red background on hover */
+    }
+}
+
 // Signup container styling
 .signup-container {
   background-color: $secondary-color;

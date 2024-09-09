@@ -1,25 +1,30 @@
 <div class="signup-container">
+
+    <button mat-button color="warn" routerLink="/" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+        Back to Landing Page
+    </button>
+    
     <h2>Customer Signup</h2>
     <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-      <mat-form-field>
-        <input matInput placeholder="Name" formControlName="name" required>
-      </mat-form-field>
-  
-      <mat-form-field>
-        <input matInput placeholder="Email" formControlName="email" required>
-      </mat-form-field>
-  
-      <mat-form-field>
-        <input matInput placeholder="Phone" formControlName="phone" required>
-      </mat-form-field>
-  
-      <mat-form-field>
-        <input matInput placeholder="Password" type="password" formControlName="password" required>
-      </mat-form-field>
-  
-      <button mat-raised-button color="primary" type="submit">Signup</button>
+        <mat-form-field>
+            <input matInput placeholder="Name" formControlName="name" required>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Email" formControlName="email" required>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Phone" formControlName="phone" required>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput placeholder="Password" type="password" formControlName="password" required>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit">Signup</button>
     </form>
-  
+
     <p>Already have an account? <a routerLink="/login">Login here</a></p>
-  </div>
-  
+</div>
