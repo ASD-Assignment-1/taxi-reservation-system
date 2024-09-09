@@ -1,0 +1,50 @@
+// General theme colors
+$primary-color: #007bff;
+$secondary-color: #ffffff;
+$box-shadow-color: rgba(0, 0, 0, 0.1);
+
+// Signup container styling
+.signup-container {
+  background-color: $secondary-color;
+  max-width: 400px;
+  width: 100%;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px $box-shadow-color;
+  text-align: center;
+  margin: auto;  // Center the container horizontally
+}
+
+// Form styling inside signup container
+form {
+  display: flex;
+  flex-direction: column;
+
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  button {
+    padding: 10px;
+    background-color: $primary-color;
+    color: $secondary-color;
+  }
+}
+
+// Additional styling for form elements
+h2 {
+  color: $primary-color;
+  margin-bottom: 20px;
+}
+
+p {
+  margin-top: 20px;
+
+  a {
+    color: $primary-color;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
