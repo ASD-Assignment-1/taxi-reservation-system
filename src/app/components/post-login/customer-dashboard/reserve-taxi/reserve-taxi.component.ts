@@ -1,24 +1,23 @@
 import { Component } from '@angular/core';
-
 @Component({
   selector: 'app-reserve-taxi',
   templateUrl: './reserve-taxi.component.html',
   styleUrls: ['./reserve-taxi.component.scss'],
 })
 export class ReserveTaxiComponent {
-  center = { lat: 6.9271, lng: 79.8612 }; // Default center (Colombo)
+  center: google.maps.LatLngLiteral = { lat: 6.9271, lng: 79.8612 }; // Example: Colombo center
   zoom = 12;
+  markers: Array<{ position: google.maps.LatLngLiteral, label: string }> = [];
 
   pickupLocation: string = '';
   dropoffLocation: string = '';
-  
-  markers: Array<{ position: { lat: number, lng: number }, label: string, title: string }> = [];
+  selectedLatLng: google.maps.LatLngLiteral | null = null;
 
-  selectedLocationType: 'pickup' | 'dropoff' = 'pickup'; // Track which location to set
+  selectedLocationType: 'pickup' | 'dropoff' = 'pickup'; 
 
-  constructor() {}
+  isPickupSelected = false;
+  isDropoffSelected = false;
 
-  ngOnInit(): void {}
 
   onMapClick(event: google.maps.MapMouseEvent) {
     if (event.latLng) {
@@ -47,10 +46,30 @@ export class ReserveTaxiComponent {
     this.markers.push(newMarker);
   }
 
+
+  onCheckboxChange(type: 'pickup' | 'dropoff') {
+    if (this.selectedLatLng) {
+      if (type === 'pickup') {
+        if (this.isPickupSelected) {
+          this.pickupLocation = `${this.selectedLatLng.lat}, ${this.selectedLatLng.lng}`;
+        } else {
+          this.pickupLocation = '';
+        }
+      } else if (type === 'dropoff') {
+        if (this.isDropoffSelected) {
+          this.dropoffLocation = `${this.selectedLatLng.lat}, ${this.selectedLatLng.lng}`;
+        } else {
+          this.dropoffLocation = '';
+        }
+      }
+    } else {
+      alert('Please select a location on the map first.');
+    }
+  }
+
   searchDrivers() {
     if (this.pickupLocation && this.dropoffLocation) {
-      // Logic for searching drivers based on locations
-      console.log(`Searching drivers from ${this.pickupLocation} to ${this.dropoffLocation}`);
+      console.log(`Searching drivers from pickup: ${this.pickupLocation} to dropoff: ${this.dropoffLocation}`);
     } else {
       alert('Please select both Pickup and Drop-off locations.');
     }
