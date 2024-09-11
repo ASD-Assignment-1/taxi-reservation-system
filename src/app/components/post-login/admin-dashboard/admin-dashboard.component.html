@@ -1,1 +1,15 @@
-<p>admin-dashboard works!</p>
+
+<div class="dashboard-container">
+    <!-- Navigation Bar -->
+    <nav class="dashboard-nav">
+        <button mat-button routerLink="dashboard">Dashboard</button>
+        <button mat-button routerLink="user-management">User Management</button>
+        <button mat-button routerLink="booking-overview">Booking Overview</button>
+        <button mat-button routerLink="driver-management">Driver Management</button>
+        <button mat-button routerLink="reports">Reports</button>
+        <button mat-button routerLink="system-settings">System Settings</button>
+    </nav>
+
+    <router-outlet></router-outlet>
+    
+</div>
