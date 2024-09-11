@@ -8,12 +8,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
+import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
 
 @NgModule({
   declarations: [
     CustomerDashboardComponent,
-    DriverDashboardComponent
+    DriverDashboardComponent,
+    AdminDashboardComponent,
   ],
   imports: [
     CommonModule,
