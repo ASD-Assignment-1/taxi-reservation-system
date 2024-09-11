@@ -54,12 +54,6 @@ section {
     }
   }
   
-  /* Make sure the landing page doesn't overlap with the header or footer */
-  main {
-    margin-top: 80px;  /* Adjust based on header height */
-    margin-bottom: 80px;  /* Adjust based on footer height */
-  }
-  
   /* Responsive adjustments for smaller screens */
   @media (max-width: 768px) {
     .cta-buttons {

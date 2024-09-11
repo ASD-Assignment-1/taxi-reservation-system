@@ -7,6 +7,10 @@ import { AvailableDriversComponent } from './available-drivers/available-drivers
 import { BookingHistoryComponent } from './booking-history/booking-history.component';
 import { SettingsComponent } from './settings/settings.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { FormsModule } from '@angular/forms';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -19,7 +23,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
   ],
   imports: [
     CommonModule,
-    CustomerDashboardRoutingModule
+    CustomerDashboardRoutingModule,
+    FormsModule,
+    GoogleMapsModule,
+    MatInputModule,
+    MatButtonModule,
   ]
 })
 export class CustomerDashboardModule { }

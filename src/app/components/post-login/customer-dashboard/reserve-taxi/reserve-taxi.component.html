@@ -1,1 +1,33 @@
-<p>reserve-taxi works!</p>
+<div class="reserve-taxi-container">
+  <h2>Reserve a Taxi</h2>
+  
+  <div class="map-container">
+    <google-map
+      height="400px"
+      width="100%"
+      [center]="center"
+      [zoom]="zoom"
+      (mapClick)="onMapClick($event)">
+      
+      <!-- Add a map-marker for each marker in the array -->
+      <map-marker *ngFor="let marker of markers"
+                  [position]="marker.position"
+                  [label]="marker.label"
+                  [title]="marker.title">
+      </map-marker>
+      
+    </google-map>
+  </div>
+
+  <div class="location-info">
+    <mat-form-field appearance="outline">
+      <input matInput placeholder="Pickup Location" [(ngModel)]="pickupLocation" readonly>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <input matInput placeholder="Drop-off Location" [(ngModel)]="dropoffLocation" readonly>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="searchDrivers()">Search for Drivers</button>
+  </div>
+</div>
