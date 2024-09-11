@@ -24,17 +24,13 @@ header {
   text-align: center;
   font-size: 1.5rem;
   box-shadow: 0 4px 10px $box-shadow-color;
-  position: fixed;
   top: 0;
-  width: 100%;
   z-index: 1000;
 }
 
 // Main content styling
 main {
-  flex: 1;
   padding: 80px 20px; // Adds space below header and above footer
-  display: flex;
   justify-content: center;
   align-items: center;
 }

@@ -3,74 +3,74 @@ $primary-color: #007bff;
 $secondary-color: #ffffff;
 $box-shadow-color: rgba(0, 0, 0, 0.1);
 
+// Back button styling
 .back-button {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    display: flex;
-    align-items: center;
-    font-size: 16px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  z-index: 10; // Ensure the button is above other content
 
-    mat-icon {
-        margin-right: 8px;
-    }
+  mat-icon {
+    margin-right: 8px;
+  }
 
-    /* Optional: Change hover effect */
-    &:hover {
-        background-color: rgba(255, 0, 0, 0.1);
-        /* Light red background on hover */
-    }
+  &:hover {
+    background-color: rgba(255, 0, 0, 0.1); // Light red background on hover
+  }
 }
-
 
 // Login container styling
 .login-container {
-    background-color: $secondary-color;
-    max-width: 400px;
-    width: 100%;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px $box-shadow-color;
-    text-align: center;
+  background-color: $secondary-color;
+  max-width: 400px;
+  width: 100%;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px $box-shadow-color;
+  text-align: center;
+  margin: auto; // Center the container horizontally
 }
 
 // Form styling inside login container
 form {
+  display: flex;
+  flex-direction: column;
+
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  mat-radio-group {
     display: flex;
-    flex-direction: column;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
 
-    mat-form-field {
-        width: 100%;
-        margin-bottom: 20px;
-    }
-
-    mat-radio-group {
-        display: flex;
-        justify-content: space-around;
-        margin-bottom: 20px;
-    }
-
-    button {
-        padding: 10px;
-        background-color: $primary-color;
-        color: $secondary-color;
-    }
+  button {
+    padding: 10px;
+    background-color: $primary-color;
+    color: $secondary-color;
+  }
 }
 
 // Optional: Additional styling for form elements
 h2 {
-    color: $primary-color;
-    margin-bottom: 20px;
+  color: $primary-color;
+  margin-bottom: 20px;
 }
 
 p {
-    margin-top: 20px;
+  margin-top: 20px;
 
-    a {
-        color: $primary-color;
+  a {
+    color: $primary-color;
 
-        &:hover {
-            text-decoration: underline;
-        }
+    &:hover {
+      text-decoration: underline;
     }
+  }
 }
