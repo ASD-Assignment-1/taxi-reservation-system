@@ -1,0 +1,6 @@
+<div class="status-indicator">
+    <h3>Current Status: {{ currentStatus }}</h3>
+    <mat-slide-toggle [(ngModel)]="status" (change)="onStatusChange($event)">
+        Toggle Status: Available / Busy
+    </mat-slide-toggle>
+</div>

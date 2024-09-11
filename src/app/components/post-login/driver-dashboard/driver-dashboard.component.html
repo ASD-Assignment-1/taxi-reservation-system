@@ -1,1 +1,13 @@
-<p>driver-dashboard works!</p>
+<div class="dashboard-container">
+    <!-- Navigation Bar -->
+    <nav class="dashboard-nav">
+        <button mat-button routerLink="status-toggle">Status</button>
+        <button mat-button routerLink="booking-requests">Booking Requests</button>
+        <button mat-button routerLink="current-trip">Current Trip</button>
+        <button mat-button routerLink="trip-history">Trip History</button>
+        <button mat-button routerLink="settings">Settings</button>
+    </nav>
+
+    <router-outlet></router-outlet>
+
+</div>

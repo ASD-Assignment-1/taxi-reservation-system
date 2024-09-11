@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DriverDashboardComponent } from './driver-dashboard/driver-dashboard.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 
 const routes: Routes = [
@@ -11,7 +10,13 @@ const routes: Routes = [
         (m) => m.CustomerDashboardModule
       ),
   },
-  { path: 'driver-dashboard', component: DriverDashboardComponent },
+  {
+    path: 'driver-dashboard',
+    loadChildren: () =>
+      import('./driver-dashboard/driver-dashboard.module').then(
+        (m) => m.DriverDashboardModule
+      ),
+  },
   { path: 'admin-dashboard', component: AdminDashboardComponent },
 ];
 

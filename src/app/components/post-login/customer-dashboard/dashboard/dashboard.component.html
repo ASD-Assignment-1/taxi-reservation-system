@@ -1,37 +1,27 @@
-<div class="dashboard-container">
-    <!-- Navigation Bar -->
-    <nav class="dashboard-nav">
-        <button mat-button routerLink="reserve-taxi">Reserve Taxi</button>
-        <button mat-button routerLink="available-drivers">Available Drivers</button>
-        <button mat-button routerLink="booking-history">Booking History</button>
-        <button mat-button routerLink="settings">Settings</button>
-    </nav>
+<!-- Overview Section -->
+<div class="dashboard-overview">
+    <h2>Overview</h2>
+    <p>Here you can quickly access your recent booking history and rates:</p>
 
-    <!-- Overview Section -->
-    <div class="dashboard-overview">
-        <h2>Overview</h2>
-        <p>Here you can quickly access your recent booking history and rates:</p>
+    <div class="overview-summary">
+        <div class="recent-bookings">
+            <h3>Latest Booking History</h3>
+            <ul>
+                <li *ngFor="let booking of latestBookings">
+                    <span>{{ booking.date }} - {{ booking.driver }} - {{ booking.rating }} stars</span>
+                </li>
+            </ul>
+        </div>
 
-        <div class="overview-summary">
-            <div class="recent-bookings">
-                <h3>Latest Booking History</h3>
-                <ul>
-                    <li *ngFor="let booking of latestBookings">
-                        <span>{{ booking.date }} - {{ booking.driver }} - {{ booking.rating }} stars</span>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="recent-rates">
-                <h3>Latest Trip Rates</h3>
-                <ul>
-                    <li *ngFor="let rate of latestRates">
-                        <span>{{ rate.date }} - {{ rate.distance }} km - ${{ rate.price }}</span>
-                    </li>
-                </ul>
-            </div>
+        <div class="recent-rates">
+            <h3>Latest Trip Rates</h3>
+            <ul>
+                <li *ngFor="let rate of latestRates">
+                    <span>{{ rate.date }} - {{ rate.distance }} km - ${{ rate.price }}</span>
+                </li>
+            </ul>
         </div>
     </div>
-
-    <!-- Router Outlet for Loading Selected Features -->
 </div>
+
+<!-- Router Outlet for Loading Selected Features -->
