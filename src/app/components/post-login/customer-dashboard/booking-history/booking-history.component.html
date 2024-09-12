@@ -1,1 +1,49 @@
-<p>booking-history works!</p>
+<div class="booking-history-container">
+    <h2>Booking History</h2>
+
+    <mat-accordion>
+        <!-- Ongoing Trips Section -->
+        <mat-expansion-panel *ngFor="let trip of ongoingTrips" class="ongoing-trip">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <div class="trip-header">
+                        <span class="ongoing">Ongoing Trip</span>
+                    </div>
+                </mat-panel-title>
+                <mat-panel-description> Amount: LKR {{ trip.amount }} </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div class="trip-details">
+                <img [src]="trip.driver.image" alt="Driver Image" class="driver-image" />
+                <p><strong>Driver:</strong><mat-icon *ngFor="let star of getStars(trip.driver.rating)"
+                        [ngClass]="star === 'filled' ? 'star-filled' : 'star-outline'">
+                        {{ star === 'filled' ? 'star' : 'star_border' }}
+                    </mat-icon>({{trip.driver.rating}})</p>
+                <p><strong>Pickup:</strong> {{ trip.pickup }}</p>
+                <p><strong>Drop-off:</strong> {{ trip.dropoff }}</p>
+                <p><strong>Status:</strong> {{ trip.status }}</p>
+                <button mat-raised-button color="accent" (click)="payForTrip(trip)">Pay</button>
+            </div>
+        </mat-expansion-panel>
+
+        <!-- Completed Trips Section -->
+        <mat-expansion-panel *ngFor="let trip of completedTrips" class="completed-trip">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <div class="trip-header">
+                        <span class="complete">Completed Trip</span>
+                    </div>
+                </mat-panel-title>
+                <mat-panel-description> Amount: LKR {{ trip.amount }} </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div class="trip-details">
+                <img [src]="trip.driver.image" alt="Driver Image" class="driver-image" />
+                <p><strong>Driver:</strong> {{ trip.driver.name }} ({{ trip.driver.rating }} ⭐)</p>
+                <p><strong>Pickup:</strong> {{ trip.pickup }}</p>
+                <p><strong>Drop-off:</strong> {{ trip.dropoff }}</p>
+                <p><strong>Status:</strong> {{ trip.status }}</p>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
