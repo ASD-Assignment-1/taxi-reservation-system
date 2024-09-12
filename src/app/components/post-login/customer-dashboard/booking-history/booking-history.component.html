@@ -39,7 +39,10 @@
 
             <div class="trip-details">
                 <img [src]="trip.driver.image" alt="Driver Image" class="driver-image" />
-                <p><strong>Driver:</strong> {{ trip.driver.name }} ({{ trip.driver.rating }} ⭐)</p>
+                <p><strong>Driver:</strong><mat-icon *ngFor="let star of getStars(trip.driver.rating)"
+                        [ngClass]="star === 'filled' ? 'star-filled' : 'star-outline'">
+                        {{ star === 'filled' ? 'star' : 'star_border' }}
+                    </mat-icon>({{trip.driver.rating}})</p>
                 <p><strong>Pickup:</strong> {{ trip.pickup }}</p>
                 <p><strong>Drop-off:</strong> {{ trip.dropoff }}</p>
                 <p><strong>Status:</strong> {{ trip.status }}</p>

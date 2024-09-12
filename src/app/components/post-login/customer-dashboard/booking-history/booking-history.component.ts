@@ -15,7 +15,7 @@ export class BookingHistoryComponent {
       driver: {
         name: 'John Doe',
         image: 'assets/images/empty-user.jpg',
-        rating: 4.8,
+        rating: 3.8,
       },
     },
     {
@@ -26,7 +26,7 @@ export class BookingHistoryComponent {
       driver: {
         name: 'Jane Smith',
         image: 'assets/images/empty-user.jpg',
-        rating: 4.5,
+        rating: 3.5,
       },
     },
   ];
@@ -40,7 +40,7 @@ export class BookingHistoryComponent {
       driver: {
         name: 'Chris Lee',
         image: 'assets/images/empty-user.jpg',
-        rating: 4.9,
+        rating: 4,
       },
     },
     {
