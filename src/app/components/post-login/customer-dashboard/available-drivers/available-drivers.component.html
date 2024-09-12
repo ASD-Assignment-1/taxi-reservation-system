@@ -1,1 +1,24 @@
-<p>available-drivers works!</p>
+<div class="available-drivers-container">
+    <!-- Trip Summary -->
+    <div class="trip-summary">
+        <h2>Trip Summary</h2>
+        <p>Total Amount: LKR {{ tripAmount }}</p>
+    </div>
+
+    <!-- Drivers List -->
+    <div class="drivers-grid">
+        <div *ngFor="let driver of drivers" class="driver-card">
+            <mat-card class="driver-card-content">
+                <img mat-card-image [src]="driver.image" alt="{{ driver.name }}">
+                <mat-card-title>{{ driver.name }}</mat-card-title>
+                <mat-card-subtitle>Rating:
+                    <mat-icon *ngFor="let star of getStars(driver.rate)"
+                        [ngClass]="star === 'filled' ? 'star-filled' : 'star-outline'">
+                        {{ star === 'filled' ? 'star' : 'star_border' }}
+                    </mat-icon>({{driver.rate}})
+                </mat-card-subtitle>
+                <button mat-raised-button color="primary" (click)="reserveDriver(driver)">Reserve</button>
+            </mat-card>
+        </div>
+    </div>
+</div>
