@@ -1,3 +1,18 @@
+
+<header>
+    <div class="header-content">
+        <div class="logo">City Taxi Reservation</div>
+        <div class="header-icons">
+            <button class="notification-button">
+                <i class="fas fa-bell"></i>
+            </button>
+            <button class="logout-button">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
 <div class="dashboard-container">
     <!-- Navigation Bar -->
     <nav class="dashboard-nav">
@@ -6,7 +21,6 @@
         <button mat-button routerLink="current-trip">Current Trip</button>
         <button mat-button routerLink="trip-history">Trip History</button>
         <button mat-button routerLink="settings">Settings</button>
-        <button mat-button class="logout-button">Logout</button>
     </nav>
 
     <router-outlet></router-outlet>

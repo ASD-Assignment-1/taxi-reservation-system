@@ -7,11 +7,13 @@ import { AvailableDriversComponent } from './available-drivers/available-drivers
 import { BookingHistoryComponent } from './booking-history/booking-history.component';
 import { SettingsComponent } from './settings/settings.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -19,16 +21,19 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     AvailableDriversComponent,
     BookingHistoryComponent,
     SettingsComponent,
-    DashboardComponent
+    DashboardComponent,
   ],
   imports: [
     CommonModule,
     CustomerDashboardRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     GoogleMapsModule,
     MatInputModule,
     MatButtonModule,
-    MatCheckboxModule 
-  ]
+    MatCheckboxModule,
+    MatAutocompleteModule,
+    MatIconModule
+  ],
 })
-export class CustomerDashboardModule { }
+export class CustomerDashboardModule {}

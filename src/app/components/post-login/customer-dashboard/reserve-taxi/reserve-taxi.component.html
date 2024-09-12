@@ -1,27 +1,50 @@
-
 <div class="reserve-taxi-container">
   <h2>Reserve a Taxi</h2>
 
+  <mat-checkbox [(ngModel)]="useCurrentLocation" (change)="onCurrentLocationChange()">
+    Use Current Location
+  </mat-checkbox>
   <!-- Pickup Location Input -->
-  <mat-form-field appearance="fill">
-    <mat-label>Pickup Location</mat-label>
-    <input matInput [(ngModel)]="pickupLocation" placeholder="Enter Pickup Location" disabled>
+  <mat-form-field>
+    <mat-icon matPrefix>location_on</mat-icon>
+    <mat-label>Pick Up Location</mat-label>
+    <input matInput [formControl]="pickupControl" [matAutocomplete]="pickupAuto" placeholder="Enter Pickup Location">
+    <mat-autocomplete #pickupAuto="matAutocomplete" (optionSelected)="onPickupSelect($event)">
+      <mat-option *ngFor="let result of filteredPickupResults" [id]="result.place_id" [value]="result.display_name">
+        {{ result.display_name }}
+      </mat-option>
+    </mat-autocomplete>
   </mat-form-field>
-  <mat-checkbox [(ngModel)]="isPickupSelected" (change)="onCheckboxChange('pickup')">Mark as Pickup
-    Location</mat-checkbox>
 
-  <!-- Drop-off Location Input -->
-  <mat-form-field appearance="fill">
-    <mat-label>Drop-off Location</mat-label>
-    <input matInput [(ngModel)]="dropoffLocation" placeholder="Enter Drop-off Location" disabled>
+  <mat-form-field>
+    <mat-icon matPrefix>location_on</mat-icon>
+    <mat-label>Drop Off Location</mat-label>
+    <input matInput [formControl]="dropoffControl" [matAutocomplete]="dropoffAuto"
+      placeholder="Enter Drop-off Location">
+    <mat-autocomplete #dropoffAuto="matAutocomplete" (optionSelected)="onDropoffSelect($event)">
+      <mat-option *ngFor="let result of filteredDropoffResults" [id]="result.place_id" [value]="result.display_name">
+        {{ result.display_name }}
+      </mat-option>
+    </mat-autocomplete>
   </mat-form-field>
-  <mat-checkbox [(ngModel)]="isDropoffSelected" (change)="onCheckboxChange('dropoff')">Mark as Drop-off
-    Location</mat-checkbox>
+
+   <!-- Buttons Container -->
+   <div class="buttons-container">
+    <button mat-raised-button color="primary" (click)="toRoute()">
+      <mat-icon>directions</mat-icon>
+      Get Directions
+    </button>
+
+    <button mat-raised-button color="primary" (click)="searchDrivers()">
+      <mat-icon>search</mat-icon>
+      Search for Drivers
+    </button>
+  </div>
 
   <!-- Google Map -->
-  <google-map [center]="center" [zoom]="zoom" height="400px" width="100%" (mapClick)="onMapClick($event)">
+  <google-map [center]="center" [zoom]="zoom" height="400px" width="100%">
     <map-marker *ngFor="let marker of markers" [position]="marker.position" [label]="marker.label"></map-marker>
+    <map-polyline *ngIf="routePath" [path]="routePath" strokeColor="#007bff"></map-polyline>
   </google-map>
 
-  <button mat-raised-button color="primary" (click)="searchDrivers()">Search for Drivers</button>
 </div>
