@@ -3,6 +3,25 @@ $primary-color: #007bff;
 $secondary-color: #ffffff;
 $box-shadow-color: rgba(0, 0, 0, 0.1);
 
+header {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
 // Back button styling
 .back-button {
   position: absolute;
