@@ -14,7 +14,9 @@
         {{ result.display_name }}
       </mat-option>
     </mat-autocomplete>
+  <mat-slide-toggle [(ngModel)]="pickupToggle" (change)="onToggleChange('pickup')">Mark on Map</mat-slide-toggle>
   </mat-form-field>
+
 
   <mat-form-field>
     <mat-icon matPrefix>location_on</mat-icon>
@@ -26,6 +28,7 @@
         {{ result.display_name }}
       </mat-option>
     </mat-autocomplete>
+    <mat-slide-toggle [(ngModel)]="dropoffToggle" (change)="onToggleChange('dropoff')">Mark on Map</mat-slide-toggle>
   </mat-form-field>
 
    <!-- Buttons Container -->
@@ -42,7 +45,7 @@
   </div>
 
   <!-- Google Map -->
-  <google-map [center]="center" [zoom]="zoom" height="400px" width="100%">
+  <google-map [center]="center" [zoom]="zoom" height="400px" width="100%" (mapClick)="onMapClick($event)">
     <map-marker *ngFor="let marker of markers" [position]="marker.position" [label]="marker.label"></map-marker>
     <map-polyline *ngIf="routePath" [path]="routePath" strokeColor="#007bff"></map-polyline>
   </google-map>

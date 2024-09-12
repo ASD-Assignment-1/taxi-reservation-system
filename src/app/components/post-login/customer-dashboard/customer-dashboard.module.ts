@@ -14,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
-
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 @NgModule({
   declarations: [
     ReserveTaxiComponent,
@@ -33,7 +33,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatCheckboxModule,
     MatAutocompleteModule,
-    MatIconModule
+    MatIconModule,
+    MatSlideToggleModule
   ],
 })
 export class CustomerDashboardModule {}

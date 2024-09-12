@@ -14,6 +14,8 @@ export class ReserveTaxiComponent implements OnInit {
   pickupControl = new FormControl();
   dropoffControl = new FormControl();
   useCurrentLocation = false;
+  pickupToggle = false;
+  dropoffToggle = false;
 
   filteredPickupResults: any[] = [];
   filteredDropoffResults: any[] = [];
@@ -58,6 +60,34 @@ export class ReserveTaxiComponent implements OnInit {
     }
   }
 
+  onToggleChange(type: string): void {
+    if (type === 'pickup') {
+      this.dropoffToggle = false;
+    } else if (type === 'dropoff') {
+      this.pickupToggle = false;
+    }
+  }
+
+  setPickupLocation(lat: number, lng: number): void {
+    this.pickupControl.setValue(`Lat: ${lat}, Lng: ${lng}`);
+    this.markers = this.markers.filter((marker) => marker.label !== 'Pickup');
+    this.markers.push({ position: { lat, lng }, label: 'Pickup' });
+    this.center = { lat, lng };
+  }
+
+  setDropoffLocation(lat: number, lng: number): void {
+    this.dropoffControl.setValue(`Lat: ${lat}, Lng: ${lng}`);
+    this.markers = this.markers.filter((marker) => marker.label !== 'Dropoff');
+    this.markers.push({ position: { lat, lng }, label: 'Dropoff' });
+    this.center = { lat, lng };
+  }
+
+  removeMarker(type: string): void {
+    this.markers = this.markers.filter(
+      (marker) => marker.label !== (type === 'pickup' ? 'Pickup' : 'Dropoff')
+    );
+  }
+
   getCurrentLocation(): void {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -66,7 +96,9 @@ export class ReserveTaxiComponent implements OnInit {
           const lng = position.coords.longitude;
           this.pickupControl.setValue(`Lat: ${lat}, Lng: ${lng}`);
           this.center = { lat, lng };
-          this.markers = [{ position: { lat, lng }, label: 'Current Location' }];
+          this.markers = [
+            { position: { lat, lng }, label: 'Current Location' },
+          ];
         },
         (error) => {
           console.error('Error getting current location', error);
@@ -78,18 +110,17 @@ export class ReserveTaxiComponent implements OnInit {
   }
 
   onMapClick(event: google.maps.MapMouseEvent) {
-    // if (event.latLng) {
-    //   const lat = event.latLng.lat();
-    //   const lng = event.latLng.lng();
-    //   // Determine which location (pickup/dropoff) is being set
-    //   if (this.selectedLocationType === 'pickup') {
-    //     this.pickupLocation = `Latitude: ${lat}, Longitude: ${lng}`;
-    //     this.addMarker(lat, lng, 'Pickup');
-    //   } else {
-    //     this.dropoffLocation = `Latitude: ${lat}, Longitude: ${lng}`;
-    //     this.addMarker(lat, lng, 'Drop-off');
-    //   }
-    // }
+    if (event.latLng) {
+      const latLng = event.latLng;
+      const lat = latLng.lat();
+      const lng = latLng.lng();
+      if (this.pickupToggle) {
+        this.setPickupLocation(lat, lng);
+      }
+      if (this.dropoffToggle) {
+        this.setDropoffLocation(lat, lng);
+      }
+    }
   }
 
   searchDrivers() {
@@ -147,7 +178,8 @@ export class ReserveTaxiComponent implements OnInit {
     this.addMarker(
       this.filteredPickupResults.find(
         (x: any) => x.place_id === result.option.id
-      )
+      ),
+      'Pickup'
     );
   }
 
@@ -155,14 +187,16 @@ export class ReserveTaxiComponent implements OnInit {
     this.addMarker(
       this.filteredDropoffResults.find(
         (x: any) => x.place_id === result.option.id
-      )
+      ),
+      'Dropoff'
     );
   }
 
-  addMarker(result: any) {
+  addMarker(result: any, type: string) {
     const lat = parseFloat(result.lat);
     const lon = parseFloat(result.lon);
 
+    this.markers = this.markers.filter((marker) => marker.label !== type);
     // Add marker to the map
     this.markers = [
       ...this.markers,
