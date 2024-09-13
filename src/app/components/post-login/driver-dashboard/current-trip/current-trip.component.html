@@ -1,1 +1,60 @@
-<p>current-trip works!</p>
+<div class="booking-request-container">
+    <mat-card class="booking-card">
+        <mat-card-header>
+            <mat-card-title>Current Trip</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div *ngIf="booking; else noBooking" class="trip-details">
+                <div class="detail-item">
+                    <mat-icon>person</mat-icon>
+                    <div>
+                        <span class="detail-label">Client Name:</span>
+                        <span class="detail-value">{{ booking.clientName }}</span>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <mat-icon>phone</mat-icon>
+                    <div>
+                        <span class="detail-label">Mobile Number:</span>
+                        <span class="detail-value">{{ booking.clientPhone }}</span>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <mat-icon>location_on</mat-icon>
+                    <div>
+                        <span class="detail-label">Pickup Location:</span>
+                        <span class="detail-value">{{ booking.pickupLocation }}</span>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <mat-icon>location_on</mat-icon>
+                    <div>
+                        <span class="detail-label">Dropoff Location:</span>
+                        <span class="detail-value">{{ booking.dropoffLocation }}</span>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <mat-icon>attach_money</mat-icon>
+                    <div>
+                        <span class="detail-label">Payment:</span>
+                        <span class="detail-value">LKR {{ booking.payment.toFixed(2) }}</span>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <mat-icon>directions</mat-icon>
+                    <div>
+                        <span class="detail-label">Directions:</span>
+                        <a [href]="getGoogleMapsUrl()" target="_blank" class="map-link">View Route on Google Maps</a>
+                    </div>
+                </div>
+            </div>
+            <!-- No Booking Message -->
+            <ng-template #noBooking>
+                <div class="empty-booking-message">
+                    <mat-icon>info</mat-icon>
+                    <p>No current trip available.</p>
+                </div>
+            </ng-template>
+        </mat-card-content>
+    </mat-card>
+</div>

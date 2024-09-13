@@ -61,6 +61,11 @@ mat-icon {
 .action-buttons {
   display: flex;
   gap: 20px;
+
+  button {
+    background-color: #fff;
+    color: #007bff;
+  }
 }
 
 button mat-icon {

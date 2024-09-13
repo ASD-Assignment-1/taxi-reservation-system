@@ -1,6 +1,41 @@
-<div class="status-indicator">
-    <h3>Current Status: {{ currentStatus }}</h3>
-    <mat-slide-toggle [(ngModel)]="status" (change)="onStatusChange($event)">
-        Toggle Status: Available / Busy
-    </mat-slide-toggle>
+<div class="customer-dashboard">
+    <!-- Overview Section -->
+    <div class="dashboard-overview">
+        <h2>Dashboard Overview</h2>
+        <p class="overview-description">Quickly manage your status and view your earnings. This dashboard helps you stay on top of your schedule and make the most out of every ride.</p>
+
+        <div class="overview-summary">
+            <div class="overview-card">
+                <h3>Current Status: {{ currentStatus }}</h3>
+                <mat-slide-toggle [(ngModel)]="status" (change)="onStatusChange($event)">
+                    Toggle Status: Available / Busy
+                </mat-slide-toggle>
+            </div>
+
+            <div class="overview-card">
+                <h3>Earnings Summary</h3>
+                <ul>
+                    <p><strong>Today's Earnings:</strong> LKR {{ earnings.today }}</p>
+                    <p><strong>This Week's Earnings:</strong> LKR {{ earnings.week }}</p>
+                    <p><strong>This Month's Earnings:</strong> LKR {{ earnings.month }}</p>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="quick-actions">
+        <h3>Quick Actions</h3>
+        <div class="action-buttons">
+            <button routerLink="../booking-requests"  mat-fab extended>
+                <mat-icon>book_online</mat-icon> Booking Requests
+            </button>
+            <button routerLink="../current-trip" mat-fab extended>
+                <mat-icon>history</mat-icon> View Current Trip
+            </button>
+            <button routerLink="../settings"  mat-fab extended>
+                <mat-icon>settings</mat-icon> Manage Account Settings
+            </button>
+        </div>
+    </div>
 </div>
