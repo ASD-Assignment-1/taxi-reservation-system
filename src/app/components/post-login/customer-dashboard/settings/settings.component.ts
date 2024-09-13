@@ -43,21 +43,6 @@ export class SettingsComponent {
     }
   }
 
-  onUploadClick() {
-    const fileInput = document.querySelector('#fileInput') as HTMLInputElement;
-    fileInput.click();
-  }
-
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.user.profilePicture = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
   
   onChangePasswordClick() {
     if (this.passwordForm.valid) {
