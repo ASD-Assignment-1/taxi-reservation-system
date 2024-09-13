@@ -74,3 +74,17 @@ button:active {
     }
   }
 }
+
+button.active-nav-item {
+  background-color: #e9f1ff; /* Highlight color for the selected nav item */
+  font-weight: bold;
+
+}
+
+button.logout-button {
+  color: red;
+}
+
+.active-nav-item {
+  background-color: #e9f1ff;
+}

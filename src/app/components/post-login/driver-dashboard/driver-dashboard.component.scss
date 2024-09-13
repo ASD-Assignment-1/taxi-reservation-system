@@ -53,6 +53,7 @@ header {
 
 button:active {
   color: #888;
+
 }
 
 .dashboard-container {
@@ -69,15 +70,22 @@ button:active {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     align-items: center; // Center items vertically
 
-    button {
-      // Common button styling
-      mat-button {
-        // Default styling for mat-button
-      }
-    }
-
     .logout-button {
       margin-left: auto; // Push this button to the far right
     }
   }
+}
+
+button.active-nav-item {
+  background-color: #e9f1ff; /* Highlight color for the selected nav item */
+  font-weight: bold;
+
+}
+
+button.logout-button {
+  color: red;
+}
+
+.active-nav-item {
+  background-color: #e9f1ff;
 }

@@ -53,6 +53,8 @@ header {
 
 button:active {
   color: #888;
+  font-weight: bold;
+
 }
 
 .dashboard-container {
@@ -72,4 +74,17 @@ button:active {
       margin-left: auto; // Push this button to the far right
     }
   }
+}
+
+
+button.active-nav-item {
+  background-color: #e9f1ff; /* Highlight color for the selected nav item */
+}
+
+button.logout-button {
+  color: red;
+}
+
+.active-nav-item {
+  background-color: #e9f1ff;
 }

@@ -16,11 +16,11 @@
 <div class="dashboard-container">
     <!-- Navigation Bar -->
     <nav class="dashboard-nav">
-        <button mat-button routerLink="status-toggle">Status</button>
-        <button mat-button routerLink="booking-requests">Booking Requests</button>
-        <button mat-button routerLink="current-trip">Current Trip</button>
-        <button mat-button routerLink="trip-history">Trip History</button>
-        <button mat-button routerLink="settings">Settings</button>
+        <button mat-button routerLink="status-toggle" routerLinkActive="active-nav-item">Status</button>
+        <button mat-button routerLink="booking-requests" routerLinkActive="active-nav-item">Booking Requests</button>
+        <button mat-button routerLink="current-trip" routerLinkActive="active-nav-item">Current Trip</button>
+        <button mat-button routerLink="trip-history" routerLinkActive="active-nav-item">Trip History</button>
+        <button mat-button class="logout-button" routerLink="settings" routerLinkActive="active-nav-item">Settings</button>
     </nav>
 
     <router-outlet></router-outlet>
