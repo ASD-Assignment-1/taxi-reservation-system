@@ -1,27 +1,47 @@
-<!-- Overview Section -->
-<div class="dashboard-overview">
-    <h2>Overview</h2>
-    <p>Here you can quickly access your recent booking history and rates:</p>
+<div class="customer-dashboard">
+    <!-- Overview Section -->
+    <div class="dashboard-overview">
+        <h2>Dashboard Overview</h2>
+        <p class="overview-description">Access your latest trip details and manage your bookings with ease.</p>
 
-    <div class="overview-summary">
-        <div class="recent-bookings">
-            <h3>Latest Booking History</h3>
-            <ul>
-                <li *ngFor="let booking of latestBookings">
-                    <span>{{ booking.date }} - {{ booking.driver }} - {{ booking.rating }} stars</span>
-                </li>
-            </ul>
+        <div class="overview-summary">
+            <div class="overview-card">
+                <mat-icon color="primary">history</mat-icon>
+                <h3>Recent Booking History</h3>
+                <ul>
+                    <li *ngFor="let booking of latestBookings">
+                        <mat-icon color="accent">directions_car</mat-icon>
+                        <span>{{ booking.date }} - {{ booking.driver }} - {{ booking.rating }} stars</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="overview-card">
+                <mat-icon color="primary">attach_money</mat-icon>
+                <h3>Latest Trip Rates</h3>
+                <ul>
+                    <li *ngFor="let rate of latestRates">
+                        <mat-icon color="accent">local_offer</mat-icon>
+                        <span>{{ rate.date }} - {{ rate.distance }} km - LKR {{ rate.price }}</span>
+                    </li>
+                </ul>
+            </div>
         </div>
+    </div>
 
-        <div class="recent-rates">
-            <h3>Latest Trip Rates</h3>
-            <ul>
-                <li *ngFor="let rate of latestRates">
-                    <span>{{ rate.date }} - {{ rate.distance }} km - ${{ rate.price }}</span>
-                </li>
-            </ul>
+    <!-- Quick Actions Section -->
+    <div class="quick-actions">
+        <h3>Quick Actions</h3>
+        <div class="action-buttons">
+            <button routerLink="../reserve-taxi" mat-raised-button color="primary">
+                <mat-icon>book_online</mat-icon> Reserve a Ride
+            </button>
+            <button routerLink="../booking-history"  mat-raised-button color="accent">
+                <mat-icon>history</mat-icon> View Booking History
+            </button>
+            <button routerLink="../settings" mat-raised-button color="warn">
+                <mat-icon>settings</mat-icon> Manage Account Settings
+            </button>
         </div>
     </div>
 </div>
-
-<!-- Router Outlet for Loading Selected Features -->

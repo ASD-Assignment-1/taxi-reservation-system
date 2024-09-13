@@ -1,34 +1,68 @@
+.customer-dashboard {
+  padding: 20px;
+  background-color: #f7faff;
+  color: #333;
+}
+
 .dashboard-overview {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
+}
 
-  h2 {
-    color: #2e3b4e;
-  }
+.overview-description {
+  margin-bottom: 20px;
+  color: #555;
+}
 
-  .overview-summary {
-    display: flex;
-    gap: 40px;
+.overview-summary {
+  display: flex;
+  justify-content: space-between;
+}
 
-    .recent-bookings, .recent-rates {
-      width: 45%;
-      background-color: #fff;
-      padding: 15px;
-      border: 1px solid #ddd;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.overview-card {
+  width: 48%;
+  background-color: #e9f1ff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  margin: 10px;
+}
 
-      h3 {
-        color: #1976d2;
-      }
+h3 {
+  color: #007bff;
+  margin-bottom: 10px;
+}
 
-      ul {
-        list-style-type: none;
-        padding: 0;
+ul {
+  list-style: none;
+  padding-left: 0;
+}
 
-        li {
-          margin: 10px 0;
-          font-size: 14px;
-        }
-      }
-    }
-  }
+li {
+  margin-bottom: 10px;
+}
+
+mat-icon {
+  vertical-align: middle;
+  margin-right: 8px;
+  color: #007bff;
+}
+
+.quick-actions {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+button mat-icon {
+  margin-right: 8px;
 }
