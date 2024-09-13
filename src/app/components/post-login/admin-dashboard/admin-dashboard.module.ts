@@ -9,7 +9,17 @@ import { ReportsComponent } from './reports/reports.component';
 import { SystemSettingsComponent } from './system-settings/system-settings.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCardModule } from '@angular/material/card';
+import {MatTableModule} from '@angular/material/table';
+import {MatDialogModule} from '@angular/material/dialog';
 @NgModule({
   declarations: [
     UserManagementComponent,
@@ -21,7 +31,18 @@ import { DashboardComponent } from './dashboard/dashboard.component';
   ],
   imports: [
     CommonModule,
-    AdminDashboardRoutingModule
+    AdminDashboardRoutingModule,
+    FormsModule,ReactiveFormsModule,
+    GoogleMapsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatAutocompleteModule,
+    MatIconModule,
+    MatSlideToggleModule,
+    MatCardModule,
+    MatTableModule,
+    MatDialogModule
   ]
 })
 export class AdminDashboardModule { }
