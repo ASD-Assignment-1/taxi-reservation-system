@@ -6,6 +6,7 @@
 
         <div class="overview-summary">
             <div class="overview-card">
+                <mat-icon color="primary">{{currentStatus==='Available'? 'event_available':'event_busy'}}</mat-icon>
                 <h3>Current Status: {{ currentStatus }}</h3>
                 <mat-slide-toggle [(ngModel)]="status" (change)="onStatusChange($event)">
                     Toggle Status: Available / Busy
@@ -13,6 +14,7 @@
             </div>
 
             <div class="overview-card">
+                <mat-icon color="primary">attach_money</mat-icon>
                 <h3>Earnings Summary</h3>
                 <ul>
                     <p><strong>Today's Earnings:</strong> LKR {{ earnings.today }}</p>

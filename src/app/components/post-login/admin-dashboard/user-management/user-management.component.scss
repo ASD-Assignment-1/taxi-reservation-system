@@ -36,7 +36,8 @@
 }
 
 
-th, td {
+th,
+td {
   padding: 15px;
   text-align: left;
 }
@@ -57,6 +58,9 @@ button.mat-icon-button {
   margin: 0 5px;
 }
 
+.mat-elevation-z8 {
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
 
 .user-details-modal-content {
   padding: 25px;
@@ -70,15 +74,9 @@ button.mat-icon-button {
 }
 
 
-.mat-elevation-z8 {
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-
 .trip-list {
   margin-top: 25px;
 }
-
 
 .trip-item {
   display: flex;
@@ -98,7 +96,9 @@ button.mat-icon-button {
 }
 
 
-.trip-info, .driver-info, .trip-review {
+.trip-info,
+.driver-info,
+.trip-review {
   flex: 1;
   padding: 12px;
   font-size: 15px;
@@ -106,7 +106,9 @@ button.mat-icon-button {
 }
 
 
-.trip-info strong, .driver-info strong, .trip-review strong {
+.trip-info strong,
+.driver-info strong,
+.trip-review strong {
   color: #0066cc;
 }
 
@@ -123,24 +125,23 @@ button.mat-icon-button {
 
 @media (max-width: 768px) {
   .user-details-modal-content {
-      max-width: 90%;
+    max-width: 90%;
   }
 
 
   .trip-item {
-      flex-direction: column;
+    flex-direction: column;
   }
 
 
-  .trip-info, .driver-info, .trip-review {
-      padding: 10px 0;
+  .trip-info,
+  .driver-info,
+  .trip-review {
+    padding: 10px 0;
   }
 }
 
 
-.mat-mdc-form-field-bottom-align::before{
+.mat-mdc-form-field-bottom-align::before {
   display: none;
 }
-
-
-

@@ -10,7 +10,7 @@
     grid-gap: 20px;
     margin-bottom: 30px;
     background-color: #fff;
-    box-shadow:  0px 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     padding: 20px;
 
 
@@ -45,17 +45,17 @@
     background-color: white;
     box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
     padding: 20px;
- 
-  }
- 
-  .search-form-field {
+
+}
+
+.search-form-field {
     flex: 1;
     max-width: 600px;
-  }
- 
-  .search-button {
+}
+
+.search-button {
     min-width: 120px;
-  }
+}
 
 
 .mat-raised-button {
@@ -77,23 +77,23 @@
     padding: 5px 10px;
     border-radius: 12px;
     font-weight: bold;
-  }
- 
-  .badge-available {
+}
+
+.badge-available {
     background-color: #28a745;
     color: white;
     padding: 5px 10px;
     border-radius: 12px;
     font-weight: bold;
-  }
- 
-  .badge-busy {
+}
+
+.badge-busy {
     background-color: #dc3545;
     color: white;
     padding: 5px 10px;
     border-radius: 12px;
     font-weight: bold;
-  }
+}
 
 
 th,
@@ -175,5 +175,25 @@ td {
     letter-spacing: 1.5px;
 }
 
-
-
+@media (max-width: 768px) {
+    .trip-details-modal-content {
+      max-width: 90%;
+    }
+  
+  
+    .trip-item {
+      flex-direction: column;
+    }
+  
+  
+    .trip-info,
+    .driver-info,
+    .trip-review {
+      padding: 10px 0;
+    }
+  }
+  
+  
+  .mat-mdc-form-field-bottom-align::before {
+    display: none;
+  }
