@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+
 import { AdminDashboardRoutingModule } from './admin-dashboard-routing.module';
 import { UserManagementComponent } from './user-management/user-management.component';
 import { BookingOverviewComponent } from './booking-overview/booking-overview.component';
@@ -8,6 +9,7 @@ import { DriverManagementComponent } from './driver-management/driver-management
 import { ReportsComponent } from './reports/reports.component';
 import { SystemSettingsComponent } from './system-settings/system-settings.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GoogleMapsModule } from '@angular/google-maps';
@@ -20,6 +22,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCardModule } from '@angular/material/card';
 import {MatTableModule} from '@angular/material/table';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
 @NgModule({
   declarations: [
     UserManagementComponent,
@@ -42,7 +46,14 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatSlideToggleModule,
     MatCardModule,
     MatTableModule,
-    MatDialogModule
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class AdminDashboardModule { }
+
+
+
+
+
