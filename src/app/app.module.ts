@@ -16,9 +16,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { Interceptor } from './utility/interceptor.interceptor';
+import { ScreenLoaderComponent } from './components/screen-loader/screen-loader.component';
 
 @NgModule({
-  declarations: [AppComponent, LandingPageComponent],
+  declarations: [AppComponent, LandingPageComponent,ScreenLoaderComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

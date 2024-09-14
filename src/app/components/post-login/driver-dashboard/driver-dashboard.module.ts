@@ -13,6 +13,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { DriverService } from 'src/app/services/driver/driver.service';
+import { CustomerService } from 'src/app/services/customer/customer.service';
+import { ReservationService } from 'src/app/services/reservation/reservation.service';
 @NgModule({
   declarations: [
     StatusToggleComponent,
@@ -31,6 +34,11 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule,
     MatInputModule,
     ReactiveFormsModule
+  ],
+  providers:[
+    DriverService,
+    CustomerService,
+    ReservationService,
   ]
 })
 export class DriverDashboardModule { }

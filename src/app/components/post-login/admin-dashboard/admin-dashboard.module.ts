@@ -24,6 +24,9 @@ import {MatTableModule} from '@angular/material/table';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
+import { DriverService } from 'src/app/services/driver/driver.service';
+import { CustomerService } from 'src/app/services/customer/customer.service';
+import { ReservationService } from 'src/app/services/reservation/reservation.service';
 @NgModule({
   declarations: [
     UserManagementComponent,
@@ -49,6 +52,11 @@ import {MatNativeDateModule} from '@angular/material/core';
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule
+  ],
+  providers:[
+    DriverService,
+    CustomerService,
+    ReservationService,
   ]
 })
 export class AdminDashboardModule { }

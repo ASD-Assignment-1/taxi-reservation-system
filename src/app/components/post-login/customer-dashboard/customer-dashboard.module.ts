@@ -17,6 +17,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { CustomerService } from 'src/app/services/customer/customer.service';
+import { DriverService } from 'src/app/services/driver/driver.service';
+import { ReservationService } from 'src/app/services/reservation/reservation.service';
 
 @NgModule({
   declarations: [
@@ -39,7 +42,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatIconModule,
     MatSlideToggleModule,
     MatCardModule,
-    MatExpansionModule
+    MatExpansionModule,
   ],
+  providers: [DriverService, CustomerService, ReservationService],
 })
 export class CustomerDashboardModule {}
