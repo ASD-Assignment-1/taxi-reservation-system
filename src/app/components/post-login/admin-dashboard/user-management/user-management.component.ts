@@ -1,17 +1,19 @@
 import { Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
+
 @Component({
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.scss']
 })
 export class UserManagementComponent {
-  @ViewChild('userDetailsModal') userDetailsModal: ElementRef | undefined;
-
+  searchTerm: string = '';
   constructor( private dialog: MatDialog){
 
+
   }
+
 
   displayedColumns: string[] = ['userId','username','name','mobile', 'email','lastLogin','lastLogout', 'actions'];
   users = [
@@ -119,9 +121,11 @@ export class UserManagementComponent {
     }
   ];
 
+
   user:any
-  
-  
+ 
+ 
+
 
   openUserDetails(user:any,dialogRef: TemplateRef<any>) {
     this.user = user;
@@ -129,7 +133,19 @@ export class UserManagementComponent {
     // Open modal to display user last 5 trips
   }
 
+
   deleteUser(userId:any) {
     // Implement delete functionality here
   }
+
+
+  applyFilter() {
+  }
+
+
 }
+
+
+
+
+
