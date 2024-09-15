@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ILocation } from 'src/app/interface/ILocation';
 import { ILogin } from 'src/app/interface/ILogin';
+import { IResponse } from 'src/app/interface/IResponse';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { showError } from 'src/app/utility/helper';
 
@@ -55,7 +56,7 @@ export class LoginComponent implements OnInit {
           .userLogin(loginRequest)
           .pipe(untilDestroyed(this))
           .subscribe({
-            next: (res: any) => {
+            next: (res: IResponse) => {
               console.log(res);
               this.router.navigate(['/customer-dashboard']);
             },
@@ -71,7 +72,7 @@ export class LoginComponent implements OnInit {
           .driverLogin(loginRequest)
           .pipe(untilDestroyed(this))
           .subscribe({
-            next: (res: any) => {
+            next: (res: IResponse) => {
               console.log(res);
               this.router.navigate(['/driver-dashboard']);
             },
