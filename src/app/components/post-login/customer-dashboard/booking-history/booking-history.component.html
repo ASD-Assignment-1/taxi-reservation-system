@@ -15,14 +15,14 @@
 
             <div class="trip-details">
                 <img [src]="trip.driver.image" alt="Driver Image" class="driver-image" />
-                <p><strong>Driver:</strong><mat-icon *ngFor="let star of getStars(trip.driver.rating)"
+                <p><strong>Driver:</strong><mat-icon *ngFor="let star of getDriverStars(trip.driver.rating)"
                         [ngClass]="star === 'filled' ? 'star-filled' : 'star-outline'">
                         {{ star === 'filled' ? 'star' : 'star_border' }}
                     </mat-icon>({{trip.driver.rating}})</p>
                 <p><strong>Pickup:</strong> {{ trip.pickup }}</p>
                 <p><strong>Drop-off:</strong> {{ trip.dropoff }}</p>
                 <p><strong>Status:</strong> {{ trip.status }}</p>
-                <button mat-raised-button color="accent" (click)="payForTrip(trip)">Pay</button>
+                <button mat-raised-button color="accent" (click)="payForTrip(trip,rateDriverModal)">Pay</button>
             </div>
         </mat-expansion-panel>
 
@@ -39,7 +39,7 @@
 
             <div class="trip-details">
                 <img [src]="trip.driver.image" alt="Driver Image" class="driver-image" />
-                <p><strong>Driver:</strong><mat-icon *ngFor="let star of getStars(trip.driver.rating)"
+                <p><strong>Driver:</strong><mat-icon *ngFor="let star of getDriverStars(trip.driver.rating)"
                         [ngClass]="star === 'filled' ? 'star-filled' : 'star-outline'">
                         {{ star === 'filled' ? 'star' : 'star_border' }}
                     </mat-icon>({{trip.driver.rating}})</p>
@@ -49,4 +49,24 @@
             </div>
         </mat-expansion-panel>
     </mat-accordion>
+
+      
 </div>
+
+<!-- Rating Modal -->
+<ng-template #rateDriverModal>
+    <div class="rate-driver-modal">
+        <h3>Rate Your Driver</h3>
+        <img [src]="selectedDriver?.image" alt="Driver Image" class="modal-driver-image" />
+        <p><strong>Name:</strong> {{ selectedDriver?.name }}</p>
+        <p><strong>Email:</strong> {{ selectedDriver?.email }}</p>
+        <div class="star-rating">
+            <mat-icon *ngFor="let star of [1, 2, 3, 4, 5]" (click)="rateDriver(star)"
+                [ngClass]="selectedRating >= star ? 'star-filled' : 'star-outline'">
+                {{ selectedRating >= star ? 'star' : 'star_border' }}
+            </mat-icon>
+        </div>
+        <textarea placeholder="Write a review..." [(ngModel)]="reviewText" rows="4"></textarea>
+        <button mat-raised-button color="primary" (click)="submitReview()">Submit Review</button>
+    </div>
+</ng-template>

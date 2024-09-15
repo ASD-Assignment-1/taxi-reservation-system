@@ -7,7 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AvailableDriversComponent {
   tripAmount: number = 50.75; // Example amount
-
+  pickupLocation = '123 Main St,123 Main St,123 Main St,123 Main St,123 Main St'; // Set the pickup location dynamically
+  dropoffLocation = '456 Elm St,123 Main St,123 Main St'; // Set the drop-off location dynamically
   drivers = [
     {
       name: 'John Doe',

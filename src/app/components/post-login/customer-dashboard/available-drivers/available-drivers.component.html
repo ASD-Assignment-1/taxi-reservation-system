@@ -1,8 +1,15 @@
 <div class="available-drivers-container">
     <!-- Trip Summary -->
-    <div class="trip-summary">
+    <div *ngIf="true" class="trip-summary">
         <h2>Trip Summary</h2>
-        <p>Total Amount: LKR {{ tripAmount }}</p>
+        <p><strong>Pickup Location:</strong> {{ pickupLocation }} &nbsp;&nbsp;|&nbsp;&nbsp; 
+            <strong>Drop-off Location:</strong> {{ dropoffLocation }} &nbsp;&nbsp;|&nbsp;&nbsp; 
+            <strong>Total Amount:</strong> LKR {{ tripAmount }}
+         </p>
+    </div>
+    <div *ngIf="false" class="trip-summary">
+        <h2>Available Drivers</h2>
+        
     </div>
 
     <!-- Drivers List -->

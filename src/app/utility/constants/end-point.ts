@@ -1,4 +1,4 @@
-import { environment } from "src/app/environments/environment";
+import { environment } from "src/environments/environment";
 
 const HOST = environment.host;
 const PORT = environment.port;

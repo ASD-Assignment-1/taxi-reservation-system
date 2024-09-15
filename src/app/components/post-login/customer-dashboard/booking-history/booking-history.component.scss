@@ -13,11 +13,11 @@
   font-weight: bold;
 
   .ongoing {
-    color: #156427; /* Blue for trip titles */
+    color: #156427;
   }
 
-  .complete{
-    color: #331578; /* Blue for trip titles */
+  .complete {
+    color: #331578;
   }
 }
 
@@ -53,8 +53,7 @@
 }
 
 .mat-expansion-panel-header.mat-expanded {
-  background-color: #007bff;
-  /* Change to blue when expanded */
+  background-color: #dcedff;
   color: white;
 }
 
@@ -65,13 +64,11 @@
 button {
   margin-top: 10px;
   background-color: #007bff;
-  /* Blue buttons */
   color: white;
 }
 
 button.mat-accent {
   background-color: #fbc02d;
-  /* Yellow Pay button for ongoing trips */
   color: black;
 }
 
@@ -80,13 +77,93 @@ button.mat-accent {
 }
 
 .star-filled {
-  color: yellow;
+  color: #ffca00;
 }
 
 .star-outline {
-  color: #ccc; /* Light grey for unfilled stars */
+  color: #ccc;
 }
 
-h2{
+h2 {
   color: #007bff;
+  text-align: center;
+}
+
+.rate-driver-modal {
+  padding: 25px;
+  max-width: 450px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  margin: auto;
+
+
+  .modal-driver-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    border: 3px solid #007bff;
+  }
+
+  h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  p {
+    font-size: 16px;
+    margin: 8px 0;
+    color: #666;
+  }
+
+  .star-rating {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .star-rating mat-icon {
+    cursor: pointer;
+    font-size: 40px;
+    margin-right: 10px;
+    transition: transform 0.3s;
+    width: 40px;
+    height: 40px;
+  }
+
+  .star-rating mat-icon:hover {
+    transform: scale(1.2);
+  }
+
+  textarea {
+    width: 90%;
+    padding: 12px;
+    margin: 20px 0;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    resize: none;
+  }
+
+  textarea::placeholder {
+    color: #aaa;
+  }
+
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
 }

@@ -20,6 +20,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { CustomerService } from 'src/app/services/customer/customer.service';
 import { DriverService } from 'src/app/services/driver/driver.service';
 import { ReservationService } from 'src/app/services/reservation/reservation.service';
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { ReservationService } from 'src/app/services/reservation/reservation.ser
     MatSlideToggleModule,
     MatCardModule,
     MatExpansionModule,
+    MatDialogModule
   ],
   providers: [DriverService, CustomerService, ReservationService],
 })
