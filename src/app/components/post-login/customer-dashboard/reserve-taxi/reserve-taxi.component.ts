@@ -70,16 +70,14 @@ export class ReserveTaxiComponent implements OnInit {
 
   setPickupLocation(lat: number, lng: number): void {
     this.pickupControl.setValue(`Lat: ${lat}, Lng: ${lng}`);
-    this.markers = this.markers.filter((marker) => marker.label !== 'Pickup');
-    this.markers.push({ position: { lat, lng }, label: 'Pickup' });
-    this.center = { lat, lng };
+    this.addMarker({ lat, lon: lng },'Pickup')
+
   }
 
   setDropoffLocation(lat: number, lng: number): void {
     this.dropoffControl.setValue(`Lat: ${lat}, Lng: ${lng}`);
-    this.markers = this.markers.filter((marker) => marker.label !== 'Dropoff');
-    this.markers.push({ position: { lat, lng }, label: 'Dropoff' });
-    this.center = { lat, lng };
+    this.addMarker({ lat, lon: lng },'Dropoff')
+
   }
 
   removeMarker(type: string): void {
@@ -93,12 +91,9 @@ export class ReserveTaxiComponent implements OnInit {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          this.pickupControl.setValue(`Lat: ${lat}, Lng: ${lng}`);
-          this.center = { lat, lng };
-          this.markers = [
-            { position: { lat, lng }, label: 'Current Location' },
-          ];
+          const lon = position.coords.longitude;
+          this.pickupControl.setValue(`Lat: ${lat}, Lng: ${lon}`);
+          this.addMarker({ lat, lon },'Pickup');
         },
         (error) => {
           console.error('Error getting current location', error);
@@ -200,7 +195,7 @@ export class ReserveTaxiComponent implements OnInit {
     // Add marker to the map
     this.markers = [
       ...this.markers,
-      { position: { lat, lng: lon }, label: result.display_name },
+      { position: { lat, lng: lon }, label: type },
     ];
 
     // Center the map on the selected location
