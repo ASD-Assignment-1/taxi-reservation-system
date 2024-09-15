@@ -5,7 +5,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { CustomerService } from 'src/app/services/customer/customer.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { showError } from 'src/app/utility/helper';
+import { showError, showSuccess } from 'src/app/utility/helper';
+import { IResponse } from 'src/app/interface/IResponse';
 
 @UntilDestroy()
 @Component({
@@ -35,8 +36,11 @@ export class SignupComponent {
         .customerRegister(this.form.value)
         .pipe(untilDestroyed(this))
         .subscribe({
-          next: (res: any) => {
-            console.log(res);
+          next: (res: IResponse) => {
+            showSuccess({
+              title:'Success',
+              text: 'User Creation Successful'
+            })
             this.router.navigate(['/login']);
           },
           error: (err: HttpErrorResponse) => {

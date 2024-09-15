@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ILocation } from 'src/app/interface/ILocation';
 import { ILogin } from 'src/app/interface/ILogin';
+import { IResponse } from 'src/app/interface/IResponse';
 import { NON_SECURE, getEndpoint } from 'src/app/utility/constants/end-point';
 import { showError } from 'src/app/utility/helper';
 
@@ -14,14 +15,14 @@ export class AuthService {
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  userLogin(data: ILogin): Observable<any> {
-    return this.httpClient.post<any>(this.baseUrl + '/user/login', {
+  userLogin(data: ILogin): Observable<IResponse> {
+    return this.httpClient.post<IResponse>(this.baseUrl + '/user/login', {
       data,
     });
   }
 
-  driverLogin(data: ILogin): Observable<any> {
-    return this.httpClient.post<any>(this.baseUrl + '/driver/login', {
+  driverLogin(data: ILogin): Observable<IResponse> {
+    return this.httpClient.post<IResponse>(this.baseUrl + '/driver/login', {
       data,
     });
   }

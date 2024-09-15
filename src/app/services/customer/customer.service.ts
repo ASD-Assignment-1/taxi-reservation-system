@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { IResponse } from 'src/app/interface/IResponse';
 import { IUserRegister } from 'src/app/interface/IUserRegister';
 import { NON_SECURE, getEndpoint } from 'src/app/utility/constants/end-point';
 
@@ -10,9 +11,9 @@ export class CustomerService {
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  customerRegister(data: IUserRegister): Observable<any> {
-    return this.httpClient.post<any>(this.baseUrl + 'user/register', {
-      data,
+  customerRegister(data: IUserRegister): Observable<IResponse> {
+    return this.httpClient.post<IResponse>(this.baseUrl + '/user/register', {
+      ...data,
       role: 'USER',
     });
   }
