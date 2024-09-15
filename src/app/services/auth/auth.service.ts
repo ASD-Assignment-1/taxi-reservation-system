@@ -17,7 +17,7 @@ export class AuthService {
 
   userLogin(data: ILogin): Observable<IResponse> {
     return this.httpClient.post<IResponse>(this.baseUrl + '/user/login', {
-      data,
+      ...data,
     });
   }
 

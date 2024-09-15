@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LandingPageComponent } from './components/landing-page/landing-page.component';
+import { AuthGuard } from './utility/guards/auth.guard';
 
 const routes: Routes = [
   { path: '', component: LandingPageComponent }, 
@@ -11,10 +12,10 @@ const routes: Routes = [
   },
   {
     path: 'post-login',
-    loadChildren: () => import('./components/post-login/post-login.module').then(m => m.PostLoginModule)
+    loadChildren: () => import('./components/post-login/post-login.module').then(m => m.PostLoginModule),
+    canMatch: [AuthGuard],
   },
-  // { path: '', redirectTo: 'pre-login/login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'pre-login/login' }  // wildcard for undefined routes
+  { path: '**', redirectTo: 'pre-login/login' } 
 ];
 
 @NgModule({

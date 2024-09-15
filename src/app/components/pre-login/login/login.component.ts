@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
           .subscribe({
             next: (res: IResponse) => {
               console.log(res);
-              this.router.navigate(['/customer-dashboard']);
+              this.router.navigate(['post-login/customer-dashboard']);
             },
             error: (err: HttpErrorResponse) => {
               showError({
@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit {
           .subscribe({
             next: (res: IResponse) => {
               console.log(res);
-              this.router.navigate(['/driver-dashboard']);
+              this.router.navigate(['post-login/customer-dashboard']);
             },
             error: (err: HttpErrorResponse) => {
               showError({
