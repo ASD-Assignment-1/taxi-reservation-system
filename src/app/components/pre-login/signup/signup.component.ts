@@ -1,29 +1,51 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { CustomerService } from 'src/app/services/customer/customer.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { showError } from 'src/app/utility/helper';
 
+@UntilDestroy()
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss']
+  styleUrls: ['./signup.component.scss'],
 })
 export class SignupComponent {
-  signupForm: FormGroup;
+  protected form: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router) {
-    this.signupForm = this.fb.group({
+  constructor(
+    private readonly service: CustomerService,
+    private fb: FormBuilder,
+    private router: Router
+  ) {
+    this.form = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
-      password: ['', Validators.required]
+      mobileNumber: ['', Validators.required],
+      password: ['', Validators.required],
     });
   }
 
   onSubmit() {
-    if (this.signupForm.valid) {
-      // Handle signup logic here (e.g., send data to backend)
-      console.log(this.signupForm.value);
-      this.router.navigate(['/login']);
+    if (this.form.valid) {
+      this.service
+        .customerRegister(this.form.value)
+        .pipe(untilDestroyed(this))
+        .subscribe({
+          next: (res: any) => {
+            console.log(res);
+            this.router.navigate(['/login']);
+          },
+          error: (err: HttpErrorResponse) => {
+            showError({
+              title: 'System Error',
+              text: 'Something Went Wrong',
+            });
+          },
+        });
     }
   }
 }

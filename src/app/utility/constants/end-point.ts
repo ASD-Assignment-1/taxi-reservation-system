@@ -6,8 +6,8 @@ const PORT = environment.port;
 export const SECURE = true;
 export const NON_SECURE = false;
 
-export const getEndpoint = (isHttps: boolean, path: string) => {
-  return `${isHttps ? 'https' : 'http'}://${HOST}${PORT}/${path}/api/v1`;
+export const getEndpoint = (isHttps: boolean) => {
+  return `${isHttps ? 'https' : 'http'}://${HOST}${PORT}/api/v1`;
 };
 
 
