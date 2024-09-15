@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatIconModule } from '@angular/material/icon';  // Import MatIconModule
+import { CustomerService } from 'src/app/services/customer/customer.service';
 
 
 @NgModule({
@@ -26,6 +27,9 @@ import { MatIconModule } from '@angular/material/icon';  // Import MatIconModule
     MatButtonModule,
     MatRadioModule,
     MatIconModule
+  ],
+  providers:[
+    CustomerService
   ]
 })
 export class PreLoginModule { }
