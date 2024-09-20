@@ -1,11 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { ReservationService } from 'src/app/services/reservation/reservation.service';
 
+@UntilDestroy()
 @Component({
   selector: 'app-available-drivers',
   templateUrl: './available-drivers.component.html',
   styleUrls: ['./available-drivers.component.scss'],
 })
-export class AvailableDriversComponent {
+export class AvailableDriversComponent implements OnInit{
+
   tripAmount: number = 50.75; // Example amount
   pickupLocation = '123 Main St,123 Main St,123 Main St,123 Main St,123 Main St'; // Set the pickup location dynamically
   dropoffLocation = '456 Elm St,123 Main St,123 Main St'; // Set the drop-off location dynamically
@@ -48,9 +52,17 @@ export class AvailableDriversComponent {
     },
   ];
 
-  getStars(rating: number): string[] {
+  constructor(private service:ReservationService){
+
+  }
+
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
+
+  protected getStars(rating: number): string[] {
     const stars = [];
-    const roundedRating = Math.round(rating); // Round the rating to nearest integer
+    const roundedRating = Math.round(rating); 
 
     for (let i = 0; i < 5; i++) {
       stars.push(i < roundedRating ? 'filled' : 'outline');
@@ -60,8 +72,7 @@ export class AvailableDriversComponent {
   }
 
 
-  reserveDriver(driver: any) {
-    // Handle driver reservation
+  protected reserveDriver(driver: any) {
     console.log(`Reserving driver: ${driver.name}`);
   }
 }

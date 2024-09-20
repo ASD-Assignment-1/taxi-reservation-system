@@ -1,5 +1,6 @@
 import { Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { CustomerService } from 'src/app/services/customer/customer.service';
 
 
 @Component({
@@ -8,9 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./user-management.component.scss']
 })
 export class UserManagementComponent {
-  searchTerm: string = '';
-  constructor( private dialog: MatDialog){
-
+  protected searchTerm: string;
+  constructor( private dialog: MatDialog,private service:CustomerService){
 
   }
 
