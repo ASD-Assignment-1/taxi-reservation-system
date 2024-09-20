@@ -11,10 +11,15 @@ import { StorageService } from 'src/app/services/storage.service';
   styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent implements OnInit {
+
   protected settingsForm: FormGroup;
   protected passwordForm: FormGroup;
   protected isEditing = false;
   protected isAvailable = true;
+
+  protected driver:any;
+
+  protected imageURL:string='assets/images/empty-user.jpg';
 
   constructor(private fb: FormBuilder, private storage: StorageService,private service:DriverService) {
     this.settingsForm = this.fb.group({
@@ -32,14 +37,16 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const driver: any = this.storage.get('driver-data');
+    this.driver = this.storage.get('driver-data');
 
     this.settingsForm.patchValue({
-      name: driver.name,
-      email: driver.email,
-      phone: driver.mobileNumber,
-      licenseNumber: driver.licenseNumber,
+      name: this.driver.name,
+      email: this.driver.email,
+      phone: this.driver.mobileNumber,
+      licenseNumber: this.driver.licenseNumber,
     });
+
+    this.imageURL = this.driver.profileImage;
   }
 
   protected onEditClick() {
@@ -57,11 +64,29 @@ export class SettingsComponent implements OnInit {
   protected onProfilePictureChange(event: any) {
     const file = event.target.files[0];
     if (file) {
+      const reader = new FileReader();
+  
+        reader.onload = () => {
+          const base64String = reader.result as string;
+          console.log(base64String); 
+          this.imageURL = base64String; 
+        };
+  
+        reader.onerror = (error) => {
+          console.error('Error converting file to base64', error);
+        };
+  
+        reader.readAsDataURL(file);
     }
   }
 
   protected onStatusChange(event: any) {
     this.isAvailable = event.checked;
     // Handle status change logic here
+  }
+
+  onCancelClick() {
+    this.isEditing=false;
+    this.imageURL = this.driver.profileImage;
   }
 }

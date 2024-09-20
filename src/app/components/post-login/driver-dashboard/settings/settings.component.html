@@ -3,10 +3,10 @@
 
     <div class="profile-section">
         <div class="profile-picture-container">
-            <img src="assets/images/empty-user.jpg" alt="User Profile Picture" class="profile-picture">
+            <img [src]="imageURL" alt="User Profile Picture" class="profile-picture">
             <input type="file" id="profilePictureInput" (change)="onProfilePictureChange($event)"
                 class="profile-picture-upload" />
-            <label for="profilePictureInput" class="profile-picture-edit">
+            <label *ngIf="isEditing" for="profilePictureInput" class="profile-picture-edit">
                 <mat-icon>edit</mat-icon>
             </label>
         </div>
@@ -50,7 +50,7 @@
                 <div class="action-buttons">
                     <button mat-raised-button color="primary" *ngIf="!isEditing" (click)="onEditClick()">Edit</button>
                     <button mat-raised-button color="primary" *ngIf="isEditing" (click)="onSaveClick()">Save</button>
-                    <button mat-raised-button color="warn" *ngIf="isEditing" (click)="isEditing=false">Cancel</button>
+                    <button mat-raised-button color="warn" *ngIf="isEditing" (click)="onCancelClick()">Cancel</button>
                 </div>
             </form>
         </div>
