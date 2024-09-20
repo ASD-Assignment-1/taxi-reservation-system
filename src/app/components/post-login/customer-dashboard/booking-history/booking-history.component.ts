@@ -1,13 +1,16 @@
-import { Component, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { ReservationService } from 'src/app/services/reservation/reservation.service';
 import Swal from 'sweetalert2';
 
+@UntilDestroy()
 @Component({
   selector: 'app-booking-history',
   templateUrl: './booking-history.component.html',
   styleUrls: ['./booking-history.component.scss'],
 })
-export class BookingHistoryComponent {
+export class BookingHistoryComponent implements OnInit {
   selectedDriver: any;
   selectedRating = 0;
   reviewText = '';
@@ -63,8 +66,11 @@ export class BookingHistoryComponent {
     },
   ];
 
-  constructor(private dialog: MatDialog) {}
-  payForTrip(trip: any, dialogRef: TemplateRef<any>) {
+  constructor(private dialog: MatDialog, private service: ReservationService) {}
+
+  ngOnInit(): void {}
+
+  protected payForTrip(trip: any, dialogRef: TemplateRef<any>) {
     console.log(
       `Paying for trip from ${trip.pickup} to ${trip.dropoff}, Amount: $${trip.amount}`
     );
@@ -75,13 +81,7 @@ export class BookingHistoryComponent {
     this.dialog.open(dialogRef);
   }
 
-  toggleTripDetails(trip: any) {
-    console.log(
-      `Toggling details for trip from ${trip.pickup} to ${trip.dropoff}`
-    );
-  }
-
-  getDriverStars(rating: number): string[] {
+  protected getDriverStars(rating: number): string[] {
     const stars = [];
     const roundedRating = Math.round(rating); // Round the rating to nearest integer
 
@@ -92,11 +92,11 @@ export class BookingHistoryComponent {
     return stars;
   }
 
-  rateDriver(star: number) {
+  protected rateDriver(star: number) {
     this.selectedRating = star; // Set selected star rating
   }
 
-  submitReview() {
+  protected submitReview() {
     const review = {
       driver: this.selectedDriver,
       rating: this.selectedRating,
@@ -110,24 +110,13 @@ export class BookingHistoryComponent {
       icon: 'info',
       showCancelButton: true,
       confirmButtonText: 'Submit Rating',
-      cancelButtonText: 'Cancel'
+      cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        // Handle rating submission logic here
-        Swal.fire(
-          'Submitted!',
-          'Your rating has been submitted.',
-          'success'
-        );
+        Swal.fire('Submitted!', 'Your rating has been submitted.', 'success');
       }
     });
-    // Logic to submit review to the server
   }
 
-  getStars(rating: number) {
-    // Return an array to display filled and outlined stars
-    return Array(5)
-      .fill(0)
-      .map((_, index) => (index < rating ? 'filled' : 'outline'));
-  }
+
 }

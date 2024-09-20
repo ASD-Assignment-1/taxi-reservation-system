@@ -1,21 +1,28 @@
 import { Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { CustomerService } from 'src/app/services/customer/customer.service';
 
-
+@UntilDestroy()
 @Component({
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
-  styleUrls: ['./user-management.component.scss']
+  styleUrls: ['./user-management.component.scss'],
 })
 export class UserManagementComponent {
-  searchTerm: string = '';
-  constructor( private dialog: MatDialog){
+  protected searchTerm: string;
+  protected displayedColumns: string[] = [
+    'userId',
+    'username',
+    'name',
+    'mobile',
+    'email',
+    'lastLogin',
+    'lastLogout',
+    'actions',
+  ];
 
-
-  }
-
-
-  displayedColumns: string[] = ['userId','username','name','mobile', 'email','lastLogin','lastLogout', 'actions'];
+  //test data,need to remove
   users = [
     {
       id: 1,
@@ -32,7 +39,7 @@ export class UserManagementComponent {
           driverName: 'Arun Silva',
           driverMobile: '0771234567',
           reviewScore: 4.5,
-          payment: 3500.00
+          payment: 3500.0,
         },
         {
           pickupLocation: '789 Hill St, Kandy',
@@ -40,7 +47,7 @@ export class UserManagementComponent {
           driverName: 'Dilan Perera',
           driverMobile: '0712345678',
           reviewScore: 5.0,
-          payment: 4500.00
+          payment: 4500.0,
         },
         {
           pickupLocation: '102 City Plaza, Colombo',
@@ -48,7 +55,7 @@ export class UserManagementComponent {
           driverName: 'Kumar Fernando',
           driverMobile: '0759876543',
           reviewScore: 4.0,
-          payment: 3200.00
+          payment: 3200.0,
         },
         {
           pickupLocation: '305 Lake Rd, Anuradhapura',
@@ -56,7 +63,7 @@ export class UserManagementComponent {
           driverName: 'Suresh Kumar',
           driverMobile: '0765432109',
           reviewScore: 3.5,
-          payment: 2700.00
+          payment: 2700.0,
         },
         {
           pickupLocation: '502 Garden St, Jaffna',
@@ -64,9 +71,9 @@ export class UserManagementComponent {
           driverName: 'Ravi Rajapaksha',
           driverMobile: '0781234567',
           reviewScore: 4.8,
-          payment: 6000.00
-        }
-      ]
+          payment: 6000.0,
+        },
+      ],
     },
     {
       id: 2,
@@ -83,7 +90,7 @@ export class UserManagementComponent {
           driverName: 'Nuwan Jayasinghe',
           driverMobile: '0719876543',
           reviewScore: 5.0,
-          payment: 4200.00
+          payment: 4200.0,
         },
         {
           pickupLocation: '98 Freedom St, Galle',
@@ -91,7 +98,7 @@ export class UserManagementComponent {
           driverName: 'Amal Silva',
           driverMobile: '0721234567',
           reviewScore: 4.5,
-          payment: 2500.00
+          payment: 2500.0,
         },
         {
           pickupLocation: '303 Church Rd, Jaffna',
@@ -99,7 +106,7 @@ export class UserManagementComponent {
           driverName: 'Chathura Perera',
           driverMobile: '0786543210',
           reviewScore: 4.2,
-          payment: 5100.00
+          payment: 5100.0,
         },
         {
           pickupLocation: '111 Temple Ln, Anuradhapura',
@@ -107,7 +114,7 @@ export class UserManagementComponent {
           driverName: 'Pradeep Kumar',
           driverMobile: '0774567890',
           reviewScore: 3.8,
-          payment: 3300.00
+          payment: 3300.0,
         },
         {
           pickupLocation: '88 Rose St, Kandy',
@@ -115,37 +122,24 @@ export class UserManagementComponent {
           driverName: 'Samantha Fernando',
           driverMobile: '0712345679',
           reviewScore: 4.9,
-          payment: 7000.00
-        }
-      ]
-    }
+          payment: 7000.0,
+        },
+      ],
+    },
   ];
+  user: any;
 
+  constructor(private dialog: MatDialog, private service: CustomerService) {}
 
-  user:any
- 
- 
-
-
-  openUserDetails(user:any,dialogRef: TemplateRef<any>) {
+  protected openUserDetails(user: any, dialogRef: TemplateRef<any>) {
     this.user = user;
     this.dialog.open(dialogRef);
     // Open modal to display user last 5 trips
   }
 
-
-  deleteUser(userId:any) {
+  protected deleteUser(userId: any) {
     // Implement delete functionality here
   }
 
-
-  applyFilter() {
-  }
-
-
+  protected search() {}
 }
-
-
-
-
-

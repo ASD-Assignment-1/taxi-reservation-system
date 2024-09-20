@@ -1,12 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { ReservationService } from 'src/app/services/reservation/reservation.service';
 
-
+@UntilDestroy()
 @Component({
   selector: 'app-booking-overview',
   templateUrl: './booking-overview.component.html',
-  styleUrls: ['./booking-overview.component.scss']
+  styleUrls: ['./booking-overview.component.scss'],
 })
-export class BookingOverviewComponent {
+export class BookingOverviewComponent implements OnInit {
+  protected displayedColumns: string[] = [
+    'driverName',
+    'driverMobile',
+    'clientName',
+    'pickupLocation',
+    'dropoffLocation',
+    'payment',
+  ];
+
   ongoingTrips = [
     {
       driverName: 'John Doe',
@@ -14,7 +25,7 @@ export class BookingOverviewComponent {
       clientName: 'Jane Smith',
       pickupLocation: '123 Main St',
       dropoffLocation: '456 Elm St',
-      payment: 1500.00
+      payment: 1500.0,
     },
     {
       driverName: 'Mark Johnson',
@@ -22,23 +33,11 @@ export class BookingOverviewComponent {
       clientName: 'Michael Lee',
       pickupLocation: '789 Oak St',
       dropoffLocation: '101 Maple Ave',
-      payment: 1200.00
-    }
-    // Add more ongoing trip data as needed
+      payment: 1200.0,
+    },
   ];
 
+  constructor(private service: ReservationService) {}
 
-  displayedColumns: string[] = [
-    'driverName',
-    'driverMobile',
-    'clientName',
-    'pickupLocation',
-    'dropoffLocation',
-    'payment'
-  ];
+  ngOnInit(): void {}
 }
-
-
-
-
-

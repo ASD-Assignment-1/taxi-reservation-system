@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { StorageService } from 'src/app/services/storage.service';
 
+@UntilDestroy()
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',

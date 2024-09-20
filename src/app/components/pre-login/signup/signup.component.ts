@@ -31,7 +31,7 @@ export class SignupComponent {
     });
   }
 
-  onSubmit() {
+  protected onSubmit() {
     if (this.form.valid) {
       this.service
         .customerRegister(this.form.value)
@@ -39,9 +39,9 @@ export class SignupComponent {
         .subscribe({
           next: (res: IResponse) => {
             showSuccess({
-              title:'Success',
-              text: 'User Creation Successful'
-            })
+              title: 'Success',
+              text: 'User Creation Successful',
+            });
             this.router.navigate(['/login']);
           },
           error: (err: HttpErrorResponse) => {

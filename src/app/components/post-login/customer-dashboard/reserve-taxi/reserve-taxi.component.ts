@@ -1,8 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import * as L from 'leaflet';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { debounceTime, map, switchMap } from 'rxjs';
+
+@UntilDestroy()
 @Component({
   selector: 'app-reserve-taxi',
   templateUrl: './reserve-taxi.component.html',
@@ -10,28 +16,32 @@ import { debounceTime, map, switchMap } from 'rxjs';
 })
 export class ReserveTaxiComponent implements OnInit {
   @ViewChild('map', { static: false }) mapElement: any;
+  protected directionsService = new google.maps.DirectionsService();
+  protected directionsRenderer = new google.maps.DirectionsRenderer();
 
-  pickupControl = new FormControl();
-  dropoffControl = new FormControl();
-  useCurrentLocation = false;
-  pickupToggle = false;
-  dropoffToggle = false;
+  protected useCurrentLocation = false;
 
-  filteredPickupResults: any[] = [];
-  filteredDropoffResults: any[] = [];
-  markers: any[] = [];
-  routePath: any[] = [];
+  protected filteredPickupResults: any[] = [];
+  protected filteredDropoffResults: any[] = [];
 
-  center = { lat: 6.927079, lng: 79.861244 };
-  zoom = 13;
+  protected markers: any[] = [];
+  protected routePath: any[] = [];
 
-  directionsService = new google.maps.DirectionsService();
-  directionsRenderer = new google.maps.DirectionsRenderer();
+  protected center = { lat: 6.927079, lng: 79.861244 };
+  protected zoom = 13;
 
-  constructor(private http: HttpClient) {}
+  protected form: FormGroup;
+  constructor(private http: HttpClient, private fb: FormBuilder) {
+    this.form = this.fb.group({
+      pickUp: ['', Validators.required],
+      dropOff: ['', Validators.required],
+      pickupToggle: [false, Validators.required],
+      dropoffToggle: [false, Validators.required],
+    });
+  }
 
   ngOnInit() {
-    this.pickupControl.valueChanges
+    this.form.get('pickUp')?.valueChanges
       .pipe(
         debounceTime(300),
         switchMap((value) => this.searchLocations(value))
@@ -42,7 +52,7 @@ export class ReserveTaxiComponent implements OnInit {
         this.filteredPickupResults = results;
       });
 
-    this.dropoffControl.valueChanges
+    this.form.get('dropOff')?.valueChanges
       .pipe(
         debounceTime(300),
         switchMap((value) => this.searchLocations(value))
@@ -52,48 +62,41 @@ export class ReserveTaxiComponent implements OnInit {
       });
   }
 
-  onCurrentLocationChange(): void {
+  protected onCurrentLocationChange(): void {
     if (this.useCurrentLocation) {
       this.getCurrentLocation();
     } else {
-      this.pickupControl.setValue('');
+      this.form.get('pickUp')?.setValue('');
     }
   }
 
-  onToggleChange(type: string): void {
+  protected onToggleChange(type: string): void {
     if (type === 'pickup') {
-      this.dropoffToggle = false;
+      this.form.get('dropoffToggle')?.setValue(false);
     } else if (type === 'dropoff') {
-      this.pickupToggle = false;
+      this.form.get('pickupToggle')?.setValue(false);
     }
   }
 
-  setPickupLocation(lat: number, lng: number): void {
-    this.pickupControl.setValue(`Lat: ${lat}, Lng: ${lng}`);
-    this.addMarker({ lat, lon: lng },'Pickup')
-
+  protected setPickupLocation(lat: number, lng: number): void {
+    this.form.get('pickUp')?.setValue(`Lat: ${lat}, Lng: ${lng}`);
+    this.addMarker({ lat, lon: lng }, 'Pickup');
   }
 
-  setDropoffLocation(lat: number, lng: number): void {
-    this.dropoffControl.setValue(`Lat: ${lat}, Lng: ${lng}`);
-    this.addMarker({ lat, lon: lng },'Dropoff')
-
+  protected setDropoffLocation(lat: number, lng: number): void {
+    this.form.get('dropOff')?.setValue(`Lat: ${lat}, Lng: ${lng}`);
+    this.addMarker({ lat, lon: lng }, 'Dropoff');
   }
 
-  removeMarker(type: string): void {
-    this.markers = this.markers.filter(
-      (marker) => marker.label !== (type === 'pickup' ? 'Pickup' : 'Dropoff')
-    );
-  }
 
-  getCurrentLocation(): void {
+  protected getCurrentLocation(): void {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
-          this.pickupControl.setValue(`Lat: ${lat}, Lng: ${lon}`);
-          this.addMarker({ lat, lon },'Pickup');
+          this.form.get('pickUp')?.setValue(`Lat: ${lat}, Lng: ${lon}`);
+          this.addMarker({ lat, lon }, 'Pickup');
         },
         (error) => {
           console.error('Error getting current location', error);
@@ -104,23 +107,22 @@ export class ReserveTaxiComponent implements OnInit {
     }
   }
 
-  onMapClick(event: google.maps.MapMouseEvent) {
+  protected onMapClick(event: google.maps.MapMouseEvent) {
     if (event.latLng) {
       const latLng = event.latLng;
       const lat = latLng.lat();
       const lng = latLng.lng();
-      if (this.pickupToggle) {
+      if (this.form.get('pickupToggle')?.value) {
         this.setPickupLocation(lat, lng);
       }
-      if (this.dropoffToggle) {
+      if (this.form.get('dropoffToggle')?.value) {
         this.setDropoffLocation(lat, lng);
       }
     }
   }
 
-  searchDrivers() {
+  protected searchDrivers() {
     if (this.markers.length >= 2) {
-      this.calculateAndDisplayRoute();
       this.routePath = [
         {
           lat: this.markers[0].position.lat,
@@ -139,26 +141,7 @@ export class ReserveTaxiComponent implements OnInit {
     window.open(url, '_blank');
   }
 
-  calculateAndDisplayRoute() {
-    if (this.markers.length >= 2) {
-      this.directionsService.route(
-        {
-          origin: this.markers[0].position,
-          destination: this.markers[1].position,
-          travelMode: google.maps.TravelMode.DRIVING,
-        },
-        (result, status) => {
-          if (status === google.maps.DirectionsStatus.OK) {
-            this.directionsRenderer.setDirections(result);
-          } else {
-            console.error('Directions request failed due to ' + status);
-          }
-        }
-      );
-    }
-  }
-
-  searchLocations(query: string) {
+  protected searchLocations(query: string) {
     if (query.length < 3) {
       return [];
     }
@@ -169,7 +152,7 @@ export class ReserveTaxiComponent implements OnInit {
       .pipe(map((results) => results));
   }
 
-  onPickupSelect(result: any) {
+  protected onPickupSelect(result: any) {
     this.addMarker(
       this.filteredPickupResults.find(
         (x: any) => x.place_id === result.option.id
@@ -178,7 +161,7 @@ export class ReserveTaxiComponent implements OnInit {
     );
   }
 
-  onDropoffSelect(result: any) {
+  protected onDropoffSelect(result: any) {
     this.addMarker(
       this.filteredDropoffResults.find(
         (x: any) => x.place_id === result.option.id
@@ -187,7 +170,7 @@ export class ReserveTaxiComponent implements OnInit {
     );
   }
 
-  addMarker(result: any, type: string) {
+  protected addMarker(result: any, type: string) {
     const lat = parseFloat(result.lat);
     const lon = parseFloat(result.lon);
 

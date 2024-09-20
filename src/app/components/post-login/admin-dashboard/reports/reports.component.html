@@ -5,7 +5,7 @@
             <button mat-raised-button color="primary" (click)="downloadCustomerReport()">Download Customer Report</button>
             <button mat-raised-button color="primary" (click)="downloadDriverReport()">Download Driver Report</button>
         </div>
-        <form [formGroup]="form" class="date-range-form">
+        <form [formGroup]="form" (ngSubmit)="submit()" class="date-range-form">
             <mat-form-field appearance="outline" class="date-field">
                 <mat-label>From</mat-label>
                 <input matInput [matDatepicker]="fromDatePicker" placeholder="Choose date" formControlName="fromDate">
@@ -18,7 +18,7 @@
                 <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
                 <mat-datepicker #toDatePicker></mat-datepicker>
             </mat-form-field>
-            <button mat-raised-button color="primary" (click)="searchPayments()">Search</button>
+            <button mat-raised-button color="primary" type="submit">Search</button>
         </form>
     </div>
    
@@ -64,8 +64,8 @@
             </ng-container>
            
             <!-- Row definitions -->
-            <tr mat-header-row *matHeaderRowDef="['date', 'driverName', 'paymentStatus', 'paymentTime', 'amount', 'actions']"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['date', 'driverName', 'paymentStatus', 'paymentTime', 'amount', 'actions']"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
     </div>
 </div>
