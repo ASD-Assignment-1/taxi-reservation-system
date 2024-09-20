@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
       });
   }
 
-  onSubmit() {
+  protected onSubmit() {
     if (this.loginForm.valid) {
       const { role, username, password } = this.loginForm.value;
       const loginRequest: ILogin = {

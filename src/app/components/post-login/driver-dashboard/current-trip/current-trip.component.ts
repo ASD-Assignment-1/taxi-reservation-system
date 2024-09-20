@@ -1,11 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { DriverService } from 'src/app/services/driver/driver.service';
 
+@UntilDestroy()
 @Component({
   selector: 'app-current-trip',
   templateUrl: './current-trip.component.html',
   styleUrls: ['./current-trip.component.scss']
 })
-export class CurrentTripComponent {
+export class CurrentTripComponent implements OnInit{
+
   booking = {
     pickupLocation: '123 Pickup St, Springfield',
     dropoffLocation: '456 Dropoff Ave, Springfield',
@@ -17,6 +21,13 @@ export class CurrentTripComponent {
     clientName: 'Sapumal',
     clientPhone: '077-1234556',
   };
+
+  constructor(private servie:DriverService){
+
+  }
+  
+  ngOnInit(): void {
+  }
 
   getGoogleMapsUrl(): string {
     const { pickupLat, pickupLng, dropoffLat, dropoffLng } = this.booking;

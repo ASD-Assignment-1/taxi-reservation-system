@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { DriverService } from 'src/app/services/driver/driver.service';
 
+@UntilDestroy()
 @Component({
   selector: 'app-trip-history',
   templateUrl: './trip-history.component.html',
   styleUrls: ['./trip-history.component.scss'],
 })
-export class TripHistoryComponent {
+export class TripHistoryComponent implements OnInit {
   trips = [
     {
       clientName: 'John Doe',
@@ -19,11 +22,17 @@ export class TripHistoryComponent {
       payment: 25.5,
       rating: 4.5,
       feedback: 'Great ride! The driver was very friendly.',
-      date:'2021-01-01'
+      date: '2021-01-01',
     },
-  ]; // Replace with your trip data
+  ]; 
 
-  getStars(rating: number): string[] {
+  constructor(private service: DriverService) {}
+
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
+
+  protected getStars(rating: number): string[] {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       stars.push(i <= rating ? 'filled' : 'outline');
@@ -31,9 +40,9 @@ export class TripHistoryComponent {
     return stars;
   }
 
-  getGoogleMapsUrl(trip: any) {
-    const url =  `https://www.google.com/maps/dir/?api=1&origin=${trip.pickupLatitude},${trip.pickupLongitude}&destination=${trip.dropoffLatitude},${trip.dropoffLongitude}`;
-  
+  protected getGoogleMapsUrl(trip: any) {
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${trip.pickupLatitude},${trip.pickupLongitude}&destination=${trip.dropoffLatitude},${trip.dropoffLongitude}`;
+
     window.open(url, '_blank');
   }
 }
