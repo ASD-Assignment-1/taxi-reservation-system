@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { StorageService } from 'src/app/services/storage.service';
 
 
 @Component({
@@ -7,24 +8,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './system-settings.component.html',
   styleUrls: ['./system-settings.component.scss']
 })
-export class SystemSettingsComponent {
+export class SystemSettingsComponent implements OnInit{
   isEditing = false;
   settingsForm: FormGroup;
   passwordForm: FormGroup;
-  user = {
-    profilePicture: '',
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '123456789',
-  };
 
-
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private storage: StorageService) {
     this.settingsForm = this.fb.group({
-      name: [this.user.name],
-      email: [this.user.email],
-      phone: [this.user.phone],
-      currentPassword: [''],
+      name: ['',Validators.required],
+      email: ['',Validators.required],
+      phone: ['',Validators.required],
     });
 
 
@@ -32,6 +25,16 @@ export class SystemSettingsComponent {
       currentPassword: ['', Validators.required],
       newPassword: ['', Validators.required],
       confirmPassword: ['', Validators.required],
+    });
+  }
+
+  ngOnInit(): void {
+    const admin: any = this.storage.get('admin-data');
+
+    this.settingsForm.patchValue({
+      name: admin.name,
+      email: admin.email,
+      phone: admin.mobileNumber,
     });
   }
 
