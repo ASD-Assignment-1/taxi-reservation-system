@@ -11,14 +11,23 @@ export class StorageService {
     if (sessionStorage && window) {
       const value = sessionStorage.getItem(window.btoa(key));
 
-      return value ? window.atob(value) : null;
+      return value
+        ? JSON.parse(sessionStorage.getItem(window.atob(value)) || '{}')
+        : null;
     }
     return null;
   }
 
   set(key: string, value: any): void {
     if (sessionStorage && window) {
-      sessionStorage.setItem(window.btoa(key), window.btoa(value));
+      sessionStorage.setItem(
+        window.btoa(key),
+        window.btoa(JSON.stringify(value))
+      );
     }
+  }
+
+  clearAll() {
+    sessionStorage.clear();
   }
 }
