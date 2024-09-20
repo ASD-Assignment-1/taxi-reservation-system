@@ -2,9 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Component, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { debounceTime, map, switchMap } from 'rxjs';
 import { ReservationService } from 'src/app/services/reservation/reservation.service';
 
+@UntilDestroy()
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',

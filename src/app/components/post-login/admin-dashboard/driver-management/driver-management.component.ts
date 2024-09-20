@@ -16,14 +16,29 @@ import { showError, showSuccess } from 'src/app/utility/helper';
   templateUrl: './driver-management.component.html',
   styleUrls: ['./driver-management.component.scss'],
 })
-export class DriverManagementComponent implements OnInit{
+export class DriverManagementComponent implements OnInit {
+  protected displayedColumns: string[] = [
+    'driverId',
+    'licenseNumber',
+    'username',
+    'mobile',
+    'email',
+    'lastLoginDate',
+    'lastLogoutDate',
+    'status',
+    'actions',
+  ];
+
+
   protected form: FormGroup;
   protected driverId: number;
 
-  protected driverList:any[]=[];
+  protected driverList: any[] = [];
+
+  protected searchTerm: string;
 
   editingDriver: boolean = false;
-  searchTerm: string = '';
+  selectedDriver: any | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -39,18 +54,20 @@ export class DriverManagementComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.service.getAllDrivers(DriverStatus.AVAILABLE).pipe(untilDestroyed(this)).subscribe({
-      next:(res:IResponse)=>{
-        console.log(res);
-        
-      },
-      error:(err:HttpErrorResponse)=>{
-        showError({
-          title: 'System Error',
-          text: 'Something Went Wrong',
-        });
-      }
-    })
+    this.service
+      .getAllDrivers(DriverStatus.AVAILABLE)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          console.log(res);
+        },
+        error: (err: HttpErrorResponse) => {
+          showError({
+            title: 'System Error',
+            text: 'Something Went Wrong',
+          });
+        },
+      });
   }
   // drivers: any[] = [
   //   {
@@ -108,30 +125,6 @@ export class DriverManagementComponent implements OnInit{
   //   // Add more drivers as needed
   // ];
 
-  // New driver model for adding
-  // newDriver: any = {
-  //   licenseNumber: '',
-  //   mobile: '',
-  //   name: '',
-  //   email: '',
-  // };
-
-  // Selected driver for viewing/editing
-  selectedDriver: any | null = null;
-
-  // Column definitions for the table
-  displayedColumns: string[] = [
-    'driverId',
-    'licenseNumber',
-    'username',
-    'mobile',
-    'email',
-    'lastLoginDate',
-    'lastLogoutDate',
-    'status',
-    'actions',
-  ];
-
   protected submit() {
     if (!this.driverId && !this.editingDriver) {
       const username = this.generateRandomUsername(
@@ -139,11 +132,11 @@ export class DriverManagementComponent implements OnInit{
       );
       const password = this.generateRandomPassword();
 
-      const driverRequest:IDriverRegister = {
+      const driverRequest: IDriverRegister = {
         ...this.form.value,
         userName: username,
         password: password,
-        profileImage:DRIVER_INIT_IMAGE
+        profileImage: DRIVER_INIT_IMAGE,
       };
 
       this.service
@@ -153,9 +146,9 @@ export class DriverManagementComponent implements OnInit{
           next: (res: IResponse) => {
             console.log(res);
             showSuccess({
-              title:'Success',
-              text:'New Driver Added Successfully'
-            })
+              title: 'Success',
+              text: 'New Driver Added Successfully',
+            });
             this.clearForm();
           },
           error: (err: HttpErrorResponse) => {
@@ -172,9 +165,9 @@ export class DriverManagementComponent implements OnInit{
         .subscribe({
           next: (res: IResponse) => {
             showSuccess({
-              title:'Success',
-              text:'Driver Updated Successfully'
-            })
+              title: 'Success',
+              text: 'Driver Updated Successfully',
+            });
             this.clearForm();
           },
           error: (err: HttpErrorResponse) => {
@@ -185,21 +178,6 @@ export class DriverManagementComponent implements OnInit{
           },
         });
     }
-
-    // const newDriverId = `D00${this.drivers.length + 1}`;
-    // const driverToAdd: any = {
-    //   driverId: newDriverId,
-    //   licenseNumber: this.newDriver.licenseNumber!,
-    //   username: this.newDriver.name!.toLowerCase().replace(/ /g, '_'),
-    //   mobile: this.newDriver.mobile!,
-    //   email: this.newDriver.email!,
-    //   lastLoginDate: new Date(),
-    //   lastLogoutDate: new Date(),
-    //   last5Trips: [], // Assuming new driver has no trips yet
-    // };
-
-    // this.drivers.push(driverToAdd);
-    // this.clearForm();
   }
 
   protected generateRandomUsername(name: string): string {
@@ -220,20 +198,19 @@ export class DriverManagementComponent implements OnInit{
   }
 
   protected clearForm() {
-    this.form.reset();  
+    this.form.reset();
   }
 
-  editDriver(driver: any) {
+  protected editDriver(driver: any) {
     this.editingDriver = true;
   }
 
-  viewDriver(driver: any, dialogRef: TemplateRef<any>) {
+  protected viewDriver(driver: any, dialogRef: TemplateRef<any>) {
     this.dialog.open(dialogRef);
     this.selectedDriver = driver;
   }
 
-  deleteDriver(driver: any) {
-    
-  }
-  applyFilter() {}
+  protected deleteDriver(driver: any) {}
+
+  protected search() {}
 }

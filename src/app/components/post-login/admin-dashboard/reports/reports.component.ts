@@ -1,30 +1,33 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { ReservationService } from 'src/app/services/reservation/reservation.service';
 
 
+@UntilDestroy()
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss']
 })
 export class ReportsComponent {
-  fromDate: Date;
-  toDate: Date;
+
   paymentData = [
     { date: new Date(), driverName: 'John Doe', paymentStatus: 'Completed', paymentTime: new Date(), amount: 1200 },
     { date: new Date(), driverName: 'Jane Doe', paymentStatus: 'Pending', paymentTime: new Date(), amount: 1000 }
-    // Add more payment records here
   ];
 
+  protected displayedColumns: string[] = ['date', 'driverName', 'paymentStatus', 'paymentTime', 'amount', 'actions'];
 
-  form:FormGroup
-  constructor(private fb:FormBuilder){
+  protected form:FormGroup
+  constructor(private fb:FormBuilder,private service:ReservationService){
     this.form = this.fb.group({
       fromDate: ['', Validators.required],
       toDate: ['', Validators.required],
     });
   }
-  searchPayments() {
+
+  submit() {
     // Implement search logic based on fromDate and toDate
   }
 
