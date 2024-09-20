@@ -1,18 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })
-export class SettingsComponent {
+export class SettingsComponent implements OnInit{
   settingsForm: FormGroup;
   passwordForm: FormGroup;
   isEditing = false;
-  isAvailable = true; // Default status
+  isAvailable = true;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private storage: StorageService) {
     this.settingsForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -24,6 +25,17 @@ export class SettingsComponent {
       currentPassword: ['', Validators.required],
       newPassword: ['', Validators.required],
       confirmPassword: ['', Validators.required]
+    });
+  }
+
+  ngOnInit(): void {
+    const driver: any = this.storage.get('driver-data');
+
+    this.settingsForm.patchValue({
+      name: driver.name,
+      email: driver.email,
+      phone: driver.mobileNumber,
+      licenseNumber:driver.licenseNumber
     });
   }
 

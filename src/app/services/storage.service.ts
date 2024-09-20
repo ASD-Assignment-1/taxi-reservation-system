@@ -11,9 +11,7 @@ export class StorageService {
     if (sessionStorage && window) {
       const value = sessionStorage.getItem(window.btoa(key));
 
-      return value
-        ? JSON.parse(sessionStorage.getItem(window.atob(value)) || '{}')
-        : null;
+      return value ? JSON.parse(window.atob(value) || '{}')  : null;
     }
     return null;
   }
@@ -27,7 +25,7 @@ export class StorageService {
     }
   }
 
-  clearAll() {
+  clearAll(){
     sessionStorage.clear();
   }
 }

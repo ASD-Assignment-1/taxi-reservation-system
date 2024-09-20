@@ -1,34 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
 })
-export class SettingsComponent {
+export class SettingsComponent implements OnInit {
   isEditing = false;
   settingsForm: FormGroup;
   passwordForm: FormGroup;
-  user = {
-    profilePicture: '',
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '123456789',
-  };
-
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private storage: StorageService) {
     this.settingsForm = this.fb.group({
-      name: [this.user.name],
-      email: [this.user.email],
-      phone: [this.user.phone],
-      currentPassword: [''],
+      name: ['', Validators.required],
+      email: ['', Validators.required],
+      phone: ['', Validators.required],
     });
 
     this.passwordForm = this.fb.group({
       currentPassword: ['', Validators.required],
       newPassword: ['', Validators.required],
       confirmPassword: ['', Validators.required],
+    });
+  }
+
+  ngOnInit(): void {
+    const user: any = this.storage.get('user-data');
+
+    this.settingsForm.patchValue({
+      name: user.name,
+      email: user.email,
+      phone: user.mobileNumber,
     });
   }
 
@@ -43,7 +46,6 @@ export class SettingsComponent {
     }
   }
 
-  
   onChangePasswordClick() {
     if (this.passwordForm.valid) {
       // Password change logic here
