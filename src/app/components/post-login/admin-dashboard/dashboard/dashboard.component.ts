@@ -3,6 +3,7 @@ import { Component, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { debounceTime, map, switchMap } from 'rxjs';
+import { ReservationService } from 'src/app/services/reservation/reservation.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,30 +11,34 @@ import { debounceTime, map, switchMap } from 'rxjs';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
-  totalPassengers: number = 0;
-  totalDrivers: number = 0;
-  ongoingTrips: number = 0;
-  totalRevenue: number = 0;
+  protected totalPassengers: number = 0;
+  protected totalDrivers: number = 0;
+  protected ongoingTrips: number = 0;
+  protected totalRevenue: number = 0;
 
+  protected center = { lat: 6.927079, lng: 79.861244 };
+  protected zoom = 13;
 
+  protected markers: any[] = [];
+  protected routePath: any[] = [];
+  protected filteredPickupResults: any[] = [];
+  protected filteredDropoffResults: any[] = [];
 
-  center = { lat: 6.927079, lng: 79.861244 };
-  zoom = 13;
-  markers: any[] = [];
-  routePath: any[] = [];
-  filteredPickupResults: any[] = [];
-  filteredDropoffResults: any[] = [];
-
-  recentActivities: { description: string; time: string }[] = [];
-  drivers :any[]= [];
+  drivers: any[] = [];
   recentPayments: {
     clientName: string;
     tripId: string;
     amount: number;
     date: Date;
   }[] = [];
-  reservationForm: FormGroup;
-  constructor(private fb: FormBuilder, private dialog: MatDialog,private http: HttpClient) {
+
+  protected reservationForm: FormGroup;
+  constructor(
+    private fb: FormBuilder,
+    private dialog: MatDialog,
+    private http: HttpClient,
+    private service: ReservationService
+  ) {
     this.reservationForm = this.fb.group({
       customerName: ['', Validators.required],
       customerEmail: ['', [Validators.required, Validators.email]],
@@ -44,11 +49,11 @@ export class DashboardComponent {
 
   ngOnInit(): void {
     this.loadSummaryData();
-    this.loadRecentActivities();
     this.loadRecentPayments();
 
-    this.reservationForm.get('pickupLocation')?.valueChanges
-      .pipe(
+    this.reservationForm
+      .get('pickupLocation')
+      ?.valueChanges.pipe(
         debounceTime(300),
         switchMap((value) => this.searchLocations(value))
       )
@@ -58,8 +63,9 @@ export class DashboardComponent {
         this.filteredPickupResults = results;
       });
 
-    this.reservationForm.get('dropoffLocation')?.valueChanges
-      .pipe(
+    this.reservationForm
+      .get('dropoffLocation')
+      ?.valueChanges.pipe(
         debounceTime(300),
         switchMap((value) => this.searchLocations(value))
       )
@@ -68,7 +74,7 @@ export class DashboardComponent {
       });
   }
 
-  searchLocations(query: string) {
+  protected searchLocations(query: string) {
     if (query.length < 3) {
       return [];
     }
@@ -79,28 +85,14 @@ export class DashboardComponent {
       .pipe(map((results) => results));
   }
 
-  loadSummaryData(): void {
+  protected loadSummaryData(): void {
     this.totalPassengers = 1200;
     this.totalDrivers = 320;
     this.ongoingTrips = 15;
     this.totalRevenue = 1580000;
   }
 
-  loadRecentActivities(): void {
-    this.recentActivities = [
-      { description: 'New driver registered: John Doe', time: '2 hours ago' },
-      {
-        description: 'New passenger booked a ride: Jane Smith',
-        time: '3 hours ago',
-      },
-      {
-        description: 'Trip completed by driver: David Lee',
-        time: '4 hours ago',
-      },
-    ];
-  }
-
-  loadRecentPayments(): void {
+  protected loadRecentPayments(): void {
     this.recentPayments = [
       {
         clientName: 'John Doe',
@@ -123,37 +115,37 @@ export class DashboardComponent {
     ];
   }
 
-  openReservationModal(dialogRef: TemplateRef<any>) {
+  protected openReservationModal(dialogRef: TemplateRef<any>) {
     this.dialog.open(dialogRef);
   }
 
-  searchDrivers(dialogRef: TemplateRef<any>) {
+  protected searchDrivers(dialogRef: TemplateRef<any>) {
     this.drivers = [
-      { name: 'John Doe', image: 'assets/images/empty-user.jpg', mobileNumber: '+1234567890' },
-      { name: 'Jane Smith', image: 'assets/images/empty-user.jpg', mobileNumber: '+0987654321' }
+      {
+        name: 'John Doe',
+        image: 'assets/images/empty-user.jpg',
+        mobileNumber: '+1234567890',
+      },
+      {
+        name: 'Jane Smith',
+        image: 'assets/images/empty-user.jpg',
+        mobileNumber: '+0987654321',
+      },
     ];
     this.closeModal();
     this.dialog.open(dialogRef);
   }
 
-  getAvailableDrivers(pickup: string, dropoff: string) {
-    // Mock data - replace with real driver search logic
-    return [
-      { id: 1, name: 'Driver 1' },
-      { id: 2, name: 'Driver 2' },
-    ];
-  }
+  protected reserveDriver(driver: any) {
+    const { customerName, customerEmail, pickupLocation, dropoffLocation } =
+      this.reservationForm.value;
 
-  reserveDriver(driver:any) {
-    const { customerName, customerEmail, pickupLocation, dropoffLocation } = this.reservationForm.value;
-
-    // Perform reservation logic here
     alert(`Taxi reserved for ${customerName} with ${driver.name}.`);
-    
+
     this.dialog.closeAll(); // Close modal
   }
 
-  onPickupSelect(result: any) {
+  protected onPickupSelect(result: any) {
     this.addMarker(
       this.filteredPickupResults.find(
         (x: any) => x.place_id === result.option.id
@@ -162,7 +154,7 @@ export class DashboardComponent {
     );
   }
 
-  onDropoffSelect(result: any) {
+  protected onDropoffSelect(result: any) {
     this.addMarker(
       this.filteredDropoffResults.find(
         (x: any) => x.place_id === result.option.id
@@ -171,7 +163,7 @@ export class DashboardComponent {
     );
   }
 
-  addMarker(result: any, type: string) {
+  protected addMarker(result: any, type: string) {
     const lat = parseFloat(result.lat);
     const lon = parseFloat(result.lon);
 
@@ -187,7 +179,7 @@ export class DashboardComponent {
     this.zoom = 13;
   }
 
-  closeModal() {
+  protected closeModal() {
     this.dialog.closeAll();
   }
 }
