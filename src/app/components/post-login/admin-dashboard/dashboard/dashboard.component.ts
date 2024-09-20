@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime, map, switchMap } from 'rxjs';
+import { MapService } from 'src/app/services/map/map.service';
 import { ReservationService } from 'src/app/services/reservation/reservation.service';
 
 @UntilDestroy()
@@ -38,7 +39,7 @@ export class DashboardComponent {
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
-    private http: HttpClient,
+    private mapService: MapService,
     private service: ReservationService
   ) {
     this.reservationForm = this.fb.group({
@@ -80,11 +81,10 @@ export class DashboardComponent {
     if (query.length < 3) {
       return [];
     }
-    return this.http
-      .get<any[]>(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${query}`
-      )
-      .pipe(map((results) => results));
+    return this.mapService.searchLocations(query).pipe(
+      map((results) => results),
+      untilDestroyed(this)
+    );
   }
 
   protected loadSummaryData(): void {

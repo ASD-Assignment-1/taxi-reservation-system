@@ -27,6 +27,7 @@ import {MatNativeDateModule} from '@angular/material/core';
 import { DriverService } from 'src/app/services/driver/driver.service';
 import { CustomerService } from 'src/app/services/customer/customer.service';
 import { ReservationService } from 'src/app/services/reservation/reservation.service';
+import { MapService } from 'src/app/services/map/map.service';
 @NgModule({
   declarations: [
     UserManagementComponent,
@@ -57,6 +58,7 @@ import { ReservationService } from 'src/app/services/reservation/reservation.ser
     DriverService,
     CustomerService,
     ReservationService,
+    MapService
   ]
 })
 export class AdminDashboardModule { }

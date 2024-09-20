@@ -21,6 +21,7 @@ import { CustomerService } from 'src/app/services/customer/customer.service';
 import { DriverService } from 'src/app/services/driver/driver.service';
 import { ReservationService } from 'src/app/services/reservation/reservation.service';
 import {MatDialogModule} from '@angular/material/dialog';
+import { MapService } from 'src/app/services/map/map.service';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,6 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatExpansionModule,
     MatDialogModule
   ],
-  providers: [DriverService, CustomerService, ReservationService],
+  providers: [DriverService, CustomerService, ReservationService,MapService],
 })
 export class CustomerDashboardModule {}

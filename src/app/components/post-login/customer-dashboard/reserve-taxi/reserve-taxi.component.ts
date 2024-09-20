@@ -1,12 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime, map, switchMap } from 'rxjs';
+import { MapService } from 'src/app/services/map/map.service';
+import { showError } from 'src/app/utility/helper';
 
 @UntilDestroy()
 @Component({
@@ -31,7 +29,7 @@ export class ReserveTaxiComponent implements OnInit {
   protected zoom = 13;
 
   protected form: FormGroup;
-  constructor(private http: HttpClient, private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private mapService: MapService) {
     this.form = this.fb.group({
       pickUp: ['', Validators.required],
       dropOff: ['', Validators.required],
@@ -41,8 +39,9 @@ export class ReserveTaxiComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.form.get('pickUp')?.valueChanges
-      .pipe(
+    this.form
+      .get('pickUp')
+      ?.valueChanges.pipe(
         debounceTime(300),
         switchMap((value) => this.searchLocations(value))
       )
@@ -52,8 +51,9 @@ export class ReserveTaxiComponent implements OnInit {
         this.filteredPickupResults = results;
       });
 
-    this.form.get('dropOff')?.valueChanges
-      .pipe(
+    this.form
+      .get('dropOff')
+      ?.valueChanges.pipe(
         debounceTime(300),
         switchMap((value) => this.searchLocations(value))
       )
@@ -78,16 +78,15 @@ export class ReserveTaxiComponent implements OnInit {
     }
   }
 
-  protected setPickupLocation(lat: number, lng: number): void {
-    this.form.get('pickUp')?.setValue(`Lat: ${lat}, Lng: ${lng}`);
+  protected setPickupLocation(name: string, lat: number, lng: number): void {
+    this.form.get('pickUp')?.setValue(name);
     this.addMarker({ lat, lon: lng }, 'Pickup');
   }
 
-  protected setDropoffLocation(lat: number, lng: number): void {
-    this.form.get('dropOff')?.setValue(`Lat: ${lat}, Lng: ${lng}`);
+  protected setDropoffLocation(name: string, lat: number, lng: number): void {
+    this.form.get('dropOff')?.setValue(name);
     this.addMarker({ lat, lon: lng }, 'Dropoff');
   }
-
 
   protected getCurrentLocation(): void {
     if (navigator.geolocation) {
@@ -108,17 +107,38 @@ export class ReserveTaxiComponent implements OnInit {
   }
 
   protected onMapClick(event: google.maps.MapMouseEvent) {
+    console.log(event);
+
     if (event.latLng) {
       const latLng = event.latLng;
       const lat = latLng.lat();
       const lng = latLng.lng();
-      if (this.form.get('pickupToggle')?.value) {
-        this.setPickupLocation(lat, lng);
-      }
-      if (this.form.get('dropoffToggle')?.value) {
-        this.setDropoffLocation(lat, lng);
-      }
+      this.getAddress(lat, lng);
     }
+  }
+
+  protected getAddress(lat: number, lng: number): void {
+    this.mapService
+      .getAddress(lat, lng)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res) => {
+          console.log(res.display_name);
+
+          if (this.form.get('pickupToggle')?.value) {
+            this.setPickupLocation(res.display_name, lat, lng);
+          }
+          if (this.form.get('dropoffToggle')?.value) {
+            this.setDropoffLocation(res.display_name, lat, lng);
+          }
+        },
+        error: (err: HttpErrorResponse) => {
+          showError({
+            title: 'System Error',
+            text: 'Something Went Wrong',
+          });
+        },
+      });
   }
 
   protected searchDrivers() {
@@ -145,11 +165,11 @@ export class ReserveTaxiComponent implements OnInit {
     if (query.length < 3) {
       return [];
     }
-    return this.http
-      .get<any[]>(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${query}`
-      )
-      .pipe(map((results) => results));
+
+    return this.mapService.searchLocations(query).pipe(
+      map((results) => results),
+      untilDestroyed(this)
+    );
   }
 
   protected onPickupSelect(result: any) {
