@@ -34,6 +34,7 @@ export class Interceptor implements HttpInterceptor {
     if (token) {
       authReq = request.clone({
         setHeaders: {
+          'Access-Control-Allow-Origin':'true',
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },

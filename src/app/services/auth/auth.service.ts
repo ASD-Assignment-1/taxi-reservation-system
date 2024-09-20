@@ -23,7 +23,7 @@ export class AuthService {
 
   driverLogin(data: ILogin): Observable<IResponse> {
     return this.httpClient.post<IResponse>(this.baseUrl + '/driver/login', {
-      data,
+      ...data,
     });
   }
 

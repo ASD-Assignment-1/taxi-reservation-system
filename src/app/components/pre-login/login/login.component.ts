@@ -7,6 +7,7 @@ import { ILocation } from 'src/app/interface/ILocation';
 import { ILogin } from 'src/app/interface/ILogin';
 import { IResponse } from 'src/app/interface/IResponse';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { StorageService } from 'src/app/services/storage.service';
 import { showError } from 'src/app/utility/helper';
 
 @UntilDestroy()
@@ -22,7 +23,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private service: AuthService
+    private service: AuthService,
+    private storage:StorageService
   ) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
@@ -57,7 +59,7 @@ export class LoginComponent implements OnInit {
           .pipe(untilDestroyed(this))
           .subscribe({
             next: (res: IResponse) => {
-              console.log(res);
+              this.storage.set('user-data',res.data.userDto);
               this.router.navigate(['post-login/customer-dashboard']);
             },
             error: (err: HttpErrorResponse) => {
@@ -73,7 +75,7 @@ export class LoginComponent implements OnInit {
           .pipe(untilDestroyed(this))
           .subscribe({
             next: (res: IResponse) => {
-              console.log(res);
+              this.storage.set('driver-data',res.data);
               this.router.navigate(['post-login/customer-dashboard']);
             },
             error: (err: HttpErrorResponse) => {
