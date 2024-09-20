@@ -2,35 +2,35 @@
   <h2>Driver Management</h2>
 
 
-  <div class="driver-form">
-    <mat-form-field appearance="outline" class="form-field">
-      <mat-label>License Number</mat-label>
-      <input matInput [(ngModel)]="newDriver.licenseNumber" placeholder="Enter License Number" />
-    </mat-form-field>
+  <form [formGroup]="form" (ngSubmit)="submit()" class="driver-form">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>License Number</mat-label>
+        <input formControlName="licenseNumber" matInput placeholder="Enter License Number" />
+      </mat-form-field>
 
 
-    <mat-form-field appearance="outline" class="form-field">
-      <mat-label>Mobile</mat-label>
-      <input matInput [(ngModel)]="newDriver.mobile" placeholder="Enter Mobile Number" />
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Mobile</mat-label>
+        <input formControlName="mobileNumber" matInput placeholder="Enter Mobile Number" />
+      </mat-form-field>
 
 
-    <mat-form-field appearance="outline" class="form-field">
-      <mat-label>Name</mat-label>
-      <input matInput [(ngModel)]="newDriver.name" placeholder="Enter Driver Name" />
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Name</mat-label>
+        <input formControlName="name" matInput placeholder="Enter Driver Name" />
+      </mat-form-field>
 
 
-    <mat-form-field appearance="outline" class="form-field">
-      <mat-label>Email</mat-label>
-      <input matInput [(ngModel)]="newDriver.email" placeholder="Enter Email" />
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Email</mat-label>
+        <input formControlName="email" matInput placeholder="Enter Email" />
+      </mat-form-field>
 
 
-    <button mat-raised-button color="primary" (click)="saveDriver()">
-      {{ editingDriver ? 'Update Driver' : 'Add Driver' }}
-    </button>
-  </div>
+      <button mat-raised-button color="primary" type="submit">
+        {{ editingDriver ? 'Update Driver' : 'Add Driver' }}
+      </button>
+  </form>
 
 
   <div class="search-container">
@@ -42,7 +42,7 @@
   </div>
 
 
-  <table mat-table [dataSource]="drivers" class="mat-elevation-z8 driver-table">
+  <table mat-table [dataSource]="driverList" class="mat-elevation-z8 driver-table">
     <!-- Columns definitions -->
     <ng-container matColumnDef="DriverId">
       <th mat-header-cell *matHeaderCellDef> Driver ID </th>

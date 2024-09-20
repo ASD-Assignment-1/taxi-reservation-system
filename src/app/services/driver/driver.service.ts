@@ -15,7 +15,13 @@ export class DriverService {
 
   driverRegister(data: IDriverRegister): Observable<IResponse> {
     return this.httpClient.post<IResponse>(this.baseUrl + '/admin/register', {
-      data,
+      ...data,
+    });
+  }
+
+  driverUpdate(data: IDriverRegister): Observable<IResponse> {
+    return this.httpClient.post<IResponse>(this.baseUrl + '/admin/register', {
+      ...data,
     });
   }
 
@@ -26,7 +32,7 @@ export class DriverService {
 
   rateDriver(data: IAddRate): Observable<IResponse> {
     return this.httpClient.post<IResponse>(this.baseUrl + '/user/rate', {
-      data,
+      ...data,
     });
   }
 }
