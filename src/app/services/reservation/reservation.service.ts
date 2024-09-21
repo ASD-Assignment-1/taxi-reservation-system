@@ -13,21 +13,29 @@ export class ReservationService {
   constructor(private readonly httpClient: HttpClient) {}
 
   makeUserReservation(data: IUserReservation): Observable<IResponse> {
-    return this.httpClient.post<IResponse>(this.baseUrl + 'reserve', {
+    return this.httpClient.post<IResponse>(this.baseUrl + '/reserve', {
       data,
     });
   }
 
   makeAdminReservation(data: IAdminReservation): Observable<IResponse> {
-    return this.httpClient.post<IResponse>(this.baseUrl + 'admin/reserve', {
+    return this.httpClient.post<IResponse>(this.baseUrl + '/admin/reserve', {
       data,
     });
   }
 
   makePayment(reservationId: number): Observable<IResponse> {
     const params = { reservationId: reservationId.toString() };
-    return this.httpClient.get<IResponse>(this.baseUrl + 'pay', {
+    return this.httpClient.get<IResponse>(this.baseUrl + '/pay', {
       params,
     });
+  }
+
+  getAllOngoingTrip(): Observable<IResponse> {
+    return this.httpClient.get<IResponse>(this.baseUrl + '/admin/onGoingTrips');
+  }
+
+  getFullTotalAmount(): Observable<IResponse> {
+    return this.httpClient.get<IResponse>(this.baseUrl + '/admin/fullTotalAmount');
   }
 }

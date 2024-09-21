@@ -27,12 +27,33 @@ export class DriverService {
 
   getAllDrivers(status: DriverStatus): Observable<IResponse> {
     const params = { driverStatus: status };
-    return this.httpClient.get<IResponse>(this.baseUrl + '/admin/drivers', { params });
+    return this.httpClient.get<IResponse>(this.baseUrl + '/admin/drivers', {
+      params,
+    });
+  }
+
+  getDriverById(id: number): Observable<IResponse> {
+    const params = { id: id };
+    return this.httpClient.get<IResponse>(this.baseUrl + '/driver', { params });
+  }
+
+  deleteDriver(id: number): Observable<IResponse> {
+    const params = { id: id };
+    return this.httpClient.delete<IResponse>(this.baseUrl + '/driver', {
+      params,
+    });
   }
 
   rateDriver(data: IAddRate): Observable<IResponse> {
     return this.httpClient.post<IResponse>(this.baseUrl + '/user/rate', {
       ...data,
+    });
+  }
+
+  findDrivers(lng: number, lat: number): Observable<IResponse> {
+    const params = { userLatitude: lat, userLongitude: lng };
+    return this.httpClient.get<IResponse>(this.baseUrl + '/nearestDrivers', {
+      params,
     });
   }
 }
