@@ -101,6 +101,11 @@
             </mat-form-field>
 
             <mat-form-field appearance="outline">
+                <mat-label>Customer Mobile</mat-label>
+                <input matInput formControlName="customerMobile" placeholder="Enter customer Mobile">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
                 <mat-icon matPrefix>location_on</mat-icon>
                 <mat-label>Pick Up Location</mat-label>
                 <input matInput formControlName="pickupLocation" [matAutocomplete]="pickupAuto"
@@ -135,7 +140,7 @@
                 </google-map>
             </div>
 
-            <button mat-raised-button color="primary" class="search-drivers-button" (click)="searchDrivers(driverListModal)">Search
+            <button mat-raised-button color="primary" class="search-drivers-button" [disabled]="reservationForm.invalid" (click)="searchDrivers(driverListModal)">Search
                 Drivers</button>
         </form>
     </div>
@@ -148,7 +153,7 @@
 
         <div class="driver-list">
             <div *ngFor="let driver of drivers" class="driver-item">
-                <img [src]="driver.image" alt="{{ driver.name }}" class="driver-image">
+                <img [src]="driver.profileImage" alt="{{ driver.name }}" class="driver-image">
                 <div class="driver-info">
                     <span class="driver-name">{{ driver.name }}</span>
                     <span class="driver-mobile">{{ driver.mobileNumber }}</span>

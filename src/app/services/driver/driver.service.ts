@@ -60,7 +60,7 @@ export class DriverService {
 
   findDrivers(lng: number, lat: number): Observable<IResponse> {
     const params = { userLatitude: lat, userLongitude: lng };
-    return this.httpClient.get<IResponse>(this.baseUrl + '/nearestDrivers', {
+    return this.httpClient.get<IResponse>(this.baseUrl + '/driver/nearestDrivers', {
       params,
     });
   }
