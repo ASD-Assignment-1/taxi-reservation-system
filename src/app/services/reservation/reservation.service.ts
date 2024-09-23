@@ -14,13 +14,13 @@ export class ReservationService {
 
   makeUserReservation(data: IUserReservation): Observable<IResponse> {
     return this.httpClient.post<IResponse>(this.baseUrl + '/reserve', {
-      data,
+      ...data,
     });
   }
 
   makeAdminReservation(data: IAdminReservation): Observable<IResponse> {
     return this.httpClient.post<IResponse>(this.baseUrl + '/admin/reserve', {
-      data,
+      ...data,
     });
   }
 
@@ -35,7 +35,7 @@ export class ReservationService {
     return this.httpClient.get<IResponse>(this.baseUrl + '/admin/onGoingTrips');
   }
 
-  getFullTotalAmount(): Observable<IResponse> {
+  getFullTotalIncome(): Observable<IResponse> {
     return this.httpClient.get<IResponse>(
       this.baseUrl + '/admin/fullTotalAmount'
     );

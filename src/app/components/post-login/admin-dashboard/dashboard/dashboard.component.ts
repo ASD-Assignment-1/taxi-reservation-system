@@ -1,11 +1,17 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime, map, switchMap } from 'rxjs';
+import { IAdminReservation } from 'src/app/interface/IAdminReservation';
+import { IDriver } from 'src/app/interface/IDriver';
+import { IResponse } from 'src/app/interface/IResponse';
+import { CustomerService } from 'src/app/services/customer/customer.service';
+import { DriverService } from 'src/app/services/driver/driver.service';
 import { MapService } from 'src/app/services/map/map.service';
 import { ReservationService } from 'src/app/services/reservation/reservation.service';
+import { showError, showSuccess } from 'src/app/utility/helper';
 
 @UntilDestroy()
 @Component({
@@ -27,7 +33,7 @@ export class DashboardComponent {
   protected filteredPickupResults: any[] = [];
   protected filteredDropoffResults: any[] = [];
 
-  drivers: any[] = [];
+  protected drivers: IDriver[] = [];
   recentPayments: {
     clientName: string;
     tripId: string;
@@ -40,10 +46,13 @@ export class DashboardComponent {
     private fb: FormBuilder,
     private dialog: MatDialog,
     private mapService: MapService,
-    private service: ReservationService
+    private service: ReservationService,
+    private customerService: CustomerService,
+    private driverService: DriverService
   ) {
     this.reservationForm = this.fb.group({
       customerName: ['', Validators.required],
+      customerMobile: ['', Validators.required],
       customerEmail: ['', [Validators.required, Validators.email]],
       pickupLocation: ['', Validators.required],
       dropoffLocation: ['', Validators.required],
@@ -88,12 +97,68 @@ export class DashboardComponent {
   }
 
   protected loadSummaryData(): void {
-    this.totalPassengers = 1200;
-    this.totalDrivers = 320;
-    this.ongoingTrips = 15;
-    this.totalRevenue = 1580000;
+    this.customerService
+      .getUserCount()
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          this.totalPassengers = res.data;
+        },
+        error: () => {
+          showError({
+            title: 'System Error',
+            text: 'Something Went Wrong',
+          });
+        },
+      });
+
+    this.driverService
+      .getDriverCount()
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          this.totalDrivers = res.data;
+        },
+        error: () => {
+          showError({
+            title: 'System Error',
+            text: 'Something Went Wrong',
+          });
+        },
+      });
+
+    this.service
+      .getFullTotalIncome()
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          this.totalRevenue = res.data;
+        },
+        error: () => {
+          showError({
+            title: 'System Error',
+            text: 'Something Went Wrong',
+          });
+        },
+      });
+
+    this.service
+      .getAllOngoingTrip()
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          this.ongoingTrips = res.data;
+        },
+        error: () => {
+          showError({
+            title: 'System Error',
+            text: 'Something Went Wrong',
+          });
+        },
+      });
   }
 
+  //need to implement
   protected loadRecentPayments(): void {
     this.recentPayments = [
       {
@@ -115,6 +180,21 @@ export class DashboardComponent {
         date: new Date('2024-09-12T12:45:00'),
       },
     ];
+
+    this.service
+      .getLast5Reservations()
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          this.drivers = res.data;
+        },
+        error: () => {
+          showError({
+            title: 'System Error',
+            text: 'Something Went Wrong',
+          });
+        },
+      });
   }
 
   protected openReservationModal(dialogRef: TemplateRef<any>) {
@@ -122,29 +202,65 @@ export class DashboardComponent {
   }
 
   protected searchDrivers(dialogRef: TemplateRef<any>) {
-    this.drivers = [
-      {
-        name: 'John Doe',
-        image: 'assets/images/empty-user.jpg',
-        mobileNumber: '+1234567890',
-      },
-      {
-        name: 'Jane Smith',
-        image: 'assets/images/empty-user.jpg',
-        mobileNumber: '+0987654321',
-      },
-    ];
-    this.closeModal();
-    this.dialog.open(dialogRef);
+    this.driverService
+      .findDrivers(this.markers[0].position.lng, this.markers[0].position.lat)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          if (!res.data.length) {
+            showError({
+              title: 'Oops',
+              text: 'Currently,There is no any driver in your area.Please try again later',
+            });
+            return;
+          }
+          this.drivers = res.data;
+          this.closeModal();
+          this.dialog.open(dialogRef);
+        },
+        error: () => {
+          showError({
+            title: 'System Error',
+            text: 'Something Went Wrong',
+          });
+        },
+      });
   }
 
-  protected reserveDriver(driver: any) {
-    const { customerName, customerEmail, pickupLocation, dropoffLocation } =
+  protected reserveDriver(driver: IDriver) {
+    const { customerName, customerMobile, customerEmail } =
       this.reservationForm.value;
 
-    alert(`Taxi reserved for ${customerName} with ${driver.name}.`);
+    const reservationRequest: IAdminReservation = {
+      name: customerName,
+      email: customerEmail,
+      mobileNumber: customerMobile,
+      driverUserName: driver.userName,
+      pickupLatitude: this.markers[0].position.lat,
+      pickupLongitude: this.markers[0].position.lng,
+      dropLatitude: this.markers[1].position.lat,
+      dropLongitude: this.markers[1].position.lng,
+    };
 
-    this.dialog.closeAll(); // Close modal
+    this.service
+      .makeAdminReservation(reservationRequest)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          showSuccess({
+            title: 'Success',
+            text: 'Reservation Successfully',
+          });
+          this.loadSummaryData();
+          this.closeModal();
+        },
+        error: () => {
+          showError({
+            title: 'System Error',
+            text: 'Something Went Wrong',
+          });
+        },
+      });
   }
 
   protected onPickupSelect(result: any) {
