@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DriverStatus } from 'src/app/enums/DriverStatus.enum';
+import { IDriver } from 'src/app/interface/IDriver';
 import { IDriverRegister } from 'src/app/interface/IDriverRegister';
 import { IResponse } from 'src/app/interface/IResponse';
 import { DriverService } from 'src/app/services/driver/driver.service';
 import { DRIVER_INIT_IMAGE } from 'src/app/utility/constants/common-constant';
-import { showError, showSuccess } from 'src/app/utility/helper';
+import { showError, showQuestion, showSuccess } from 'src/app/utility/helper';
 
 @UntilDestroy()
 @Component({
@@ -33,12 +34,13 @@ export class DriverManagementComponent implements OnInit {
   protected form: FormGroup;
   protected driverId: number;
 
-  protected driverList: any[] = [];
+  protected drivers: IDriver[] = [];
+  protected selectedDriver: IDriver;
 
   protected searchTerm: string;
+  protected tripList: any[] = [];
 
-  editingDriver: boolean = false;
-  selectedDriver: any | null = null;
+  protected editingDriver: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -54,76 +56,25 @@ export class DriverManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.service
-      .getAllDrivers(DriverStatus.AVAILABLE)
-      .pipe(untilDestroyed(this))
-      .subscribe({
-        next: (res: IResponse) => {
-          console.log(res);
-        },
-        error: (err: HttpErrorResponse) => {
-          showError({
-            title: 'System Error',
-            text: 'Something Went Wrong',
-          });
-        },
-      });
+    this.loadDriverData();
+    
   }
-  // drivers: any[] = [
-  //   {
-  //     driverId: 'D001',
-  //     licenseNumber: 'LIC123456',
-  //     name: 'john_doe',
-  //     mobile: '0712345678',
-  //     email: 'john.doe@example.com',
-  //     status: 'Busy',
-  //     lastLoginDate: new Date(),
-  //     lastLogoutDate: new Date(),
-  //     last5Trips: [
-  //       {
-  //         pickupLocation: '123 Main St, Colombo',
-  //         dropoffLocation: '456 Beach Rd, Galle',
-  //         driverName: 'Arun Silva',
-  //         driverMobile: '0771234567',
-  //         reviewScore: 4.5,
-  //         payment: 3500.0,
-  //       },
-  //       {
-  //         pickupLocation: '789 Hill St, Kandy',
-  //         dropoffLocation: '101 River Ln, Nuwara Eliya',
-  //         driverName: 'Dilan Perera',
-  //         driverMobile: '0712345678',
-  //         reviewScore: 5.0,
-  //         payment: 4500.0,
-  //       },
-  //       {
-  //         pickupLocation: '102 City Plaza, Colombo',
-  //         dropoffLocation: '204 Sun Ave, Negombo',
-  //         driverName: 'Kumar Fernando',
-  //         driverMobile: '0759876543',
-  //         reviewScore: 4.0,
-  //         payment: 3200.0,
-  //       },
-  //       {
-  //         pickupLocation: '305 Lake Rd, Anuradhapura',
-  //         dropoffLocation: '789 Temple St, Polonnaruwa',
-  //         driverName: 'Suresh Kumar',
-  //         driverMobile: '0765432109',
-  //         reviewScore: 3.5,
-  //         payment: 2700.0,
-  //       },
-  //       {
-  //         pickupLocation: '502 Garden St, Jaffna',
-  //         dropoffLocation: '105 Ocean Rd, Mannar',
-  //         driverName: 'Ravi Rajapaksha',
-  //         driverMobile: '0781234567',
-  //         reviewScore: 4.8,
-  //         payment: 6000.0,
-  //       },
-  //     ],
-  //   },
-  //   // Add more drivers as needed
-  // ];
+  protected loadDriverData() {
+    this.service
+    .getAllDrivers(DriverStatus.ALL)
+    .pipe(untilDestroyed(this))
+    .subscribe({
+      next: (res: IResponse) => {
+        this.drivers = res.data;
+      },
+      error: (err: HttpErrorResponse) => {
+        showError({
+          title: 'System Error',
+          text: 'Something Went Wrong',
+        });
+      },
+    });
+  }
 
   protected submit() {
     if (!this.driverId && !this.editingDriver) {
@@ -144,14 +95,15 @@ export class DriverManagementComponent implements OnInit {
         .pipe(untilDestroyed(this))
         .subscribe({
           next: (res: IResponse) => {
-            console.log(res);
             showSuccess({
               title: 'Success',
               text: 'New Driver Added Successfully',
             });
             this.clearForm();
+            this.loadDriverData();
+            this.editingDriver=false;
           },
-          error: (err: HttpErrorResponse) => {
+          error: () => {
             showError({
               title: 'System Error',
               text: 'Something Went Wrong',
@@ -160,7 +112,7 @@ export class DriverManagementComponent implements OnInit {
         });
     } else {
       this.service
-        .driverRegister(this.form.value)
+        .driverUpdate(this.driverId,this.form.value)
         .pipe(untilDestroyed(this))
         .subscribe({
           next: (res: IResponse) => {
@@ -169,8 +121,9 @@ export class DriverManagementComponent implements OnInit {
               text: 'Driver Updated Successfully',
             });
             this.clearForm();
+            this.loadDriverData();
           },
-          error: (err: HttpErrorResponse) => {
+          error: () => {
             showError({
               title: 'System Error',
               text: 'Something Went Wrong',
@@ -201,16 +154,97 @@ export class DriverManagementComponent implements OnInit {
     this.form.reset();
   }
 
-  protected editDriver(driver: any) {
+  protected editDriver(driver: IDriver) {
     this.editingDriver = true;
+    this.driverId = driver.id;
+
+    this.form.patchValue({
+      name:driver.name,
+      email:driver.email,
+      licenseNumber:driver.licenseNumber,
+      mobileNumber:driver.mobileNumber
+    })
   }
 
-  protected viewDriver(driver: any, dialogRef: TemplateRef<any>) {
-    this.dialog.open(dialogRef);
+  protected viewDriver(driver: IDriver, dialogRef: TemplateRef<any>) {
     this.selectedDriver = driver;
+    this.service.getLast5ReservationById(driver.id).pipe(untilDestroyed(this)).subscribe({
+      next: (res: IResponse) => {
+        console.log(res);
+        if (!res.data.length) {
+          showError({
+            title: 'Oops',
+            text: 'Currently,There is no any completed reservation for this driver',
+          });
+          return;
+        }
+        //need to implement
+        this.tripList = res.data;
+        this.dialog.open(dialogRef);
+      },
+      error: () => {
+        showError({
+          title: 'System Error',
+          text: 'Something Went Wrong',
+        });
+      },
+    })
+    
+    
   }
 
-  protected deleteDriver(driver: any) {}
+  protected deleteDriver(driverId:number) {
+    showQuestion(
+      {
+        title: 'Delete',
+        text: 'Are you really want to delete this driver ?',
+      },
+      (isConfirmed) => {
+        if(isConfirmed){
+          this.service
+          .deleteDriver(driverId)
+          .pipe(untilDestroyed(this))
+          .subscribe({
+            next: (res: IResponse) => {
+              showSuccess({
+                title: 'Success',
+                text: 'Driver Deleted Successfully',
+              });
+              this.loadDriverData();
+            },
+            error: () => {
+              showError({
+                title: 'System Error',
+                text: 'Something Went Wrong',
+              });
+            },
+          });
+        }
+      }
+    );
+  }
 
-  protected search() {}
+  protected search() {
+    this.service
+      .searchDriver(this.searchTerm)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          if (!res.data.length) {
+            showError({
+              title: 'Sorry, No Result Found',
+              text: 'Adjust your filters and try again',
+            });
+            return;
+          }
+          this.drivers = res.data;
+        },
+        error: () => {
+          showError({
+            title: 'System Error',
+            text: 'Something Went Wrong',
+          });
+        },
+      });
+  }
 }

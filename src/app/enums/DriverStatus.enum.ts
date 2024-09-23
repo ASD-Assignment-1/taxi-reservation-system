@@ -1,4 +1,5 @@
 export enum DriverStatus {
     BUSY = 'Busy',
-    AVAILABLE = 'Available'
+    AVAILABLE = 'Available',
+    ALL='All'
 }
