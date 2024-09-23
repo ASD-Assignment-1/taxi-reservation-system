@@ -33,7 +33,7 @@ export class DashboardComponent {
   protected filteredPickupResults: any[] = [];
   protected filteredDropoffResults: any[] = [];
 
-  drivers: IDriver[] = [];
+  protected drivers: IDriver[] = [];
   recentPayments: {
     clientName: string;
     tripId: string;
