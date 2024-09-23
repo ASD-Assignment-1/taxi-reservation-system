@@ -19,9 +19,10 @@ export class DriverService {
     });
   }
 
-  driverUpdate(data: IDriverRegister): Observable<IResponse> {
-    return this.httpClient.post<IResponse>(this.baseUrl + '/admin/register', {
+  driverUpdate(id: number, data: IDriverRegister): Observable<IResponse> {
+    return this.httpClient.post<IResponse>(this.baseUrl + '/driver/update', {
       ...data,
+      id: id,
     });
   }
 
@@ -38,7 +39,7 @@ export class DriverService {
   }
 
   deleteDriver(id: number): Observable<IResponse> {
-    const params = { id: id };
+    const params = { driverID: id };
     return this.httpClient.delete<IResponse>(this.baseUrl + '/driver', {
       params,
     });
@@ -50,10 +51,91 @@ export class DriverService {
     });
   }
 
+  searchDriver(text: string): Observable<IResponse> {
+    const params = { name: text };
+    return this.httpClient.get<IResponse>(this.baseUrl + '/driver/search', {
+      params,
+    });
+  }
+
   findDrivers(lng: number, lat: number): Observable<IResponse> {
     const params = { userLatitude: lat, userLongitude: lng };
     return this.httpClient.get<IResponse>(this.baseUrl + '/nearestDrivers', {
       params,
     });
+  }
+
+  getLast5ReservationById(id: number): Observable<IResponse> {
+    const params = { driverID: id };
+    return this.httpClient.get<IResponse>(
+      this.baseUrl + '/driver/reservation',
+      { params }
+    );
+  }
+
+  getDriverCount(): Observable<IResponse> {
+    return this.httpClient.get<IResponse>(
+      this.baseUrl + '/admin/fullDriverCount'
+    );
+  }
+
+  changeStatus(id: number, status: DriverStatus): Observable<IResponse> {
+    const params = { driverID: id, status: status };
+    return this.httpClient.post<IResponse>(
+      this.baseUrl + '/driver/updateStatus',
+      {
+        params,
+      }
+    );
+  }
+
+  dailyIncome(id: number): Observable<IResponse> {
+    const params = { driverID: id };
+    return this.httpClient.get<IResponse>(
+      this.baseUrl + '/driver/dailyIncome',
+      {
+        params,
+      }
+    );
+  }
+
+  weeklyIncome(id: number): Observable<IResponse> {
+    const params = { driverID: id };
+    return this.httpClient.get<IResponse>(
+      this.baseUrl + '/driver/weeklyIncome',
+      {
+        params,
+      }
+    );
+  }
+
+  monthlyIncome(id: number): Observable<IResponse> {
+    const params = { driverID: id };
+    return this.httpClient.get<IResponse>(
+      this.baseUrl + '/driver/monthlyIncome',
+      {
+        params,
+      }
+    );
+  }
+
+  ongoingTripWithId(id: number): Observable<IResponse> {
+    const params = { driverID: id };
+    return this.httpClient.get<IResponse>(
+      this.baseUrl + '/driver/ongoingTrip',
+      {
+        params,
+      }
+    );
+  }
+
+  getAllReservationById(id: number): Observable<IResponse> {
+    const params = { driverID: id };
+    return this.httpClient.get<IResponse>(
+      this.baseUrl + '/driver/allReservation',
+      {
+        params,
+      }
+    );
   }
 }

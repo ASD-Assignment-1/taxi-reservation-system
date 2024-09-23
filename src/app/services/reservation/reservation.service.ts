@@ -36,6 +36,32 @@ export class ReservationService {
   }
 
   getFullTotalAmount(): Observable<IResponse> {
-    return this.httpClient.get<IResponse>(this.baseUrl + '/admin/fullTotalAmount');
+    return this.httpClient.get<IResponse>(
+      this.baseUrl + '/admin/fullTotalAmount'
+    );
+  }
+
+  getLast5Reservations(): Observable<IResponse> {
+    return this.httpClient.get<IResponse>(this.baseUrl + '/admin/reservations');
+  }
+
+  calculateAmount(
+    fromLat: number,
+    fromLng: number,
+    toLat: number,
+    toLng: number
+  ): Observable<IResponse> {
+    const params = {
+      latitude1: fromLat,
+      longitude1: fromLng,
+      latitude2: toLat,
+      longitude2: toLng,
+    };
+    return this.httpClient.get<IResponse>(
+      this.baseUrl + '/driver/allReservation',
+      {
+        params,
+      }
+    );
   }
 }

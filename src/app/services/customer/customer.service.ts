@@ -17,4 +17,44 @@ export class CustomerService {
       role: 'USER',
     });
   }
+
+  updateCustomer(id:number,data: IUserRegister): Observable<IResponse> {
+    return this.httpClient.post<IResponse>(this.baseUrl + '/user/update', {
+      ...data,
+      id:id
+    });
+  }
+
+  getUserCount(): Observable<IResponse> {
+    return this.httpClient.get<IResponse>(this.baseUrl + '/admin/fullUserCount');
+  }
+
+  getAllActiveUsers(): Observable<IResponse> {
+    return this.httpClient.get<IResponse>(this.baseUrl + '/user/allUsers');
+  }
+
+  searchUser(text:string): Observable<IResponse> {
+    const params = { name:text};
+    return this.httpClient.get<IResponse>(this.baseUrl + '/user/search', {
+      params,
+    });
+  }
+
+  deleteUser(id: number): Observable<IResponse> {
+    const params = { userID: id };
+    return this.httpClient.delete<IResponse>(this.baseUrl + '/user', {
+      params,
+    });
+  }
+
+  getLast5ReservationById(id: number): Observable<IResponse> {
+    const params = { userID: id };
+    return this.httpClient.get<IResponse>(this.baseUrl + '/user/reservation', { params });
+  }
+
+  getAllReservationById(id: number): Observable<IResponse> {
+    const params = { userID: id };
+    return this.httpClient.get<IResponse>(this.baseUrl + '/user/allReservation', { params });
+  }
+
 }
