@@ -16,12 +16,15 @@ import { MatInputModule } from '@angular/material/input';
 import { DriverService } from 'src/app/services/driver/driver.service';
 import { CustomerService } from 'src/app/services/customer/customer.service';
 import { ReservationService } from 'src/app/services/reservation/reservation.service';
+import { MoneyPipe } from 'src/app/utility/pipes/money.pipe';
+import { MapService } from 'src/app/services/map/map.service';
 @NgModule({
   declarations: [
     StatusToggleComponent,
     CurrentTripComponent,
     TripHistoryComponent,
-    SettingsComponent
+    SettingsComponent,
+    MoneyPipe
   ],
   imports: [
     CommonModule,
@@ -39,6 +42,7 @@ import { ReservationService } from 'src/app/services/reservation/reservation.ser
     DriverService,
     CustomerService,
     ReservationService,
+    MapService
   ]
 })
 export class DriverDashboardModule { }

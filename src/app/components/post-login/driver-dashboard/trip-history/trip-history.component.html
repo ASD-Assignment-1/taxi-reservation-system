@@ -2,15 +2,16 @@
     <h2>Trip History</h2>
 
     <div *ngIf="!trips.length" class="no-trips-message">
-        No trips available.
+        <mat-icon>info</mat-icon>
+        <p>No current trip available.</p>
     </div>
 
     <div *ngFor="let trip of trips" class="trip-card">
         <mat-card>
             <mat-card-header>
-                <mat-card-title>{{ trip.clientName }}</mat-card-title>
-                <mat-card-subtitle>Phone: {{ trip.clientNumber }}</mat-card-subtitle>
-                <mat-card-subtitle>Date: {{ trip.date | date:'YYYY MMM dd' }}</mat-card-subtitle>
+                <mat-card-title>{{ trip.userDto.name }}</mat-card-title>
+                <mat-card-subtitle>Phone: {{ trip.userDto.mobileNumber }}</mat-card-subtitle>
+                <mat-card-subtitle>Date: {{ trip.reveredTime| date:'YYYY MMM dd' }}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content>
                 <div class="trip-details">
@@ -18,26 +19,26 @@
                         <mat-icon>location_on</mat-icon>
                         <div>
                             <span class="detail-label">From:</span>
-                            <span class="detail-value">{{ trip.pickupLocation }}</span>
+                            <span class="detail-value">{{ getPickUpLocation(trip) | async }}</span>
                         </div>
                     </div>
                     <div class="detail-item">
                         <mat-icon>location_on</mat-icon>
                         <div>
                             <span class="detail-label">To:</span>
-                            <span class="detail-value">{{ trip.dropoffLocation }}</span>
+                            <span class="detail-value">{{ getDropOffLocation(trip) | async}}</span>
                         </div>
                     </div>
                     <div class="detail-item">
                         <mat-icon>attach_money</mat-icon>
                         <div>
                             <span class="detail-label">Payment:</span>
-                            <span class="detail-value">LKR {{ trip.payment.toFixed(2) }}</span>
+                            <span class="detail-value">LKR {{ trip.paymentAmount | money }}</span>
                         </div>
                     </div>
 
                     <div class="review-section">
-                        <div class="rating">
+                        <!-- <div class="rating">
                             <mat-icon *ngFor="let star of getStars(trip.rating)"
                                       [ngClass]="star === 'filled' ? 'star-filled' : 'star-outline'">
                                 {{ star === 'filled' ? 'star' : 'star_border' }}
@@ -47,7 +48,7 @@
                         <div class="feedback">
                             <mat-icon>rate_review</mat-icon>
                             <span>Review: "{{ trip.feedback }}"</span>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </mat-card-content>

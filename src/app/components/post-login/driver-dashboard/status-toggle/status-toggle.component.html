@@ -17,9 +17,9 @@
                 <mat-icon color="primary">attach_money</mat-icon>
                 <h3>Earnings Summary</h3>
                 <ul>
-                    <p><strong>Today's Earnings:</strong> LKR {{ earnings.today }}</p>
-                    <p><strong>This Week's Earnings:</strong> LKR {{ earnings.week }}</p>
-                    <p><strong>This Month's Earnings:</strong> LKR {{ earnings.month }}</p>
+                    <p><strong>Today's Earnings:</strong> LKR {{ today | money}}</p>
+                    <p><strong>This Week's Earnings:</strong> LKR {{ week | money}}</p>
+                    <p><strong>This Month's Earnings:</strong> LKR {{ month | money}}</p>
                 </ul>
             </div>
         </div>

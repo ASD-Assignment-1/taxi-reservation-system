@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { DriverStatus } from 'src/app/enums/DriverStatus.enum';
+import { IDriver } from 'src/app/interface/IDriver';
+import { IResponse } from 'src/app/interface/IResponse';
 import { DriverService } from 'src/app/services/driver/driver.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { showError, showSuccess } from 'src/app/utility/helper';
 
 @UntilDestroy()
 @Component({
@@ -11,17 +15,20 @@ import { StorageService } from 'src/app/services/storage.service';
   styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent implements OnInit {
-
   protected settingsForm: FormGroup;
   protected passwordForm: FormGroup;
   protected isEditing = false;
   protected isAvailable = true;
 
-  protected driver:any;
+  protected driver: IDriver;
 
-  protected imageURL:string='assets/images/empty-user.jpg';
+  protected imageURL: string = 'assets/images/empty-user.jpg';
 
-  constructor(private fb: FormBuilder, private storage: StorageService,private service:DriverService) {
+  constructor(
+    private fb: FormBuilder,
+    private storage: StorageService,
+    private service: DriverService
+  ) {
     this.settingsForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -37,7 +44,11 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.driver = this.storage.get('driver-data');
+    this.driver = this.storage.get('driver-data') as unknown as IDriver;
+
+    this.driver.status === DriverStatus.AVAILABLE
+      ? (this.isAvailable = true)
+      : (this.isAvailable = false);
 
     this.settingsForm.patchValue({
       name: this.driver.name,
@@ -54,7 +65,31 @@ export class SettingsComponent implements OnInit {
   }
 
   protected onSaveClick() {
-    this.isEditing = false;
+    if (this.settingsForm.valid) {
+      this.service
+        .driverUpdate(this.driver.id, {
+          ...this.settingsForm.value,
+          profileImage: this.imageURL,
+        })
+        .pipe(untilDestroyed(this))
+        .subscribe({
+          next: (res: IResponse) => {
+            showSuccess({
+              title: 'Success',
+              text: 'Your details updated successfully',
+            });
+            this.isEditing = false;
+            this.driver = { ...this.driver, ...this.settingsForm.value };
+            this.storage.set('driver-data', this.driver);
+          },
+          error: () => {
+            showError({
+              title: 'System Error',
+              text: 'Something Went Wrong',
+            });
+          },
+        });
+    }
   }
 
   protected onChangePasswordClick() {
@@ -65,28 +100,55 @@ export class SettingsComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-  
-        reader.onload = () => {
-          const base64String = reader.result as string;
-          console.log(base64String); 
-          this.imageURL = base64String; 
-        };
-  
-        reader.onerror = (error) => {
-          console.error('Error converting file to base64', error);
-        };
-  
-        reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        console.log(base64String);
+        this.imageURL = base64String;
+      };
+
+      reader.onerror = (error) => {
+        console.error('Error converting file to base64', error);
+      };
+
+      reader.readAsDataURL(file);
     }
   }
 
   protected onStatusChange(event: any) {
     this.isAvailable = event.checked;
-    // Handle status change logic here
+
+    this.service
+      .changeStatus(
+        this.driver.id,
+        this.isAvailable ? DriverStatus.AVAILABLE : DriverStatus.BUSY
+      )
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          showSuccess({
+            title: 'Success',
+            text: 'Your status changed successfully',
+          });
+          this.driver = {
+            ...this.driver,
+            status: this.isAvailable
+              ? DriverStatus.AVAILABLE
+              : DriverStatus.BUSY,
+          };
+          this.storage.set('driver-data', this.driver);
+        },
+        error: () => {
+          showError({
+            title: 'System Error',
+            text: 'Something Went Wrong',
+          });
+        },
+      });
   }
 
   onCancelClick() {
-    this.isEditing=false;
+    this.isEditing = false;
     this.imageURL = this.driver.profileImage;
   }
 }

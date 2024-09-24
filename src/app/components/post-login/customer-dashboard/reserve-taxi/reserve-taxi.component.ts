@@ -123,7 +123,6 @@ export class ReserveTaxiComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (res) => {
-          console.log(res.display_name);
 
           if (this.form.get('pickupToggle')?.value) {
             this.setPickupLocation(res.display_name, lat, lng);

@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { IResponse } from 'src/app/interface/IResponse';
+import { IUser } from 'src/app/interface/IUser';
 import { CustomerService } from 'src/app/services/customer/customer.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { showError, showSuccess } from 'src/app/utility/helper';
 
 @UntilDestroy()
 @Component({
@@ -15,11 +18,17 @@ export class SystemSettingsComponent implements OnInit {
   protected settingsForm: FormGroup;
   protected passwordForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private storage: StorageService,private service:CustomerService) {
+  protected admin: IUser;
+
+  constructor(
+    private fb: FormBuilder,
+    private storage: StorageService,
+    private service: CustomerService
+  ) {
     this.settingsForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', Validators.required],
-      phone: ['', Validators.required],
+      mobileNumber: ['', Validators.required],
     });
 
     this.passwordForm = this.fb.group({
@@ -30,12 +39,12 @@ export class SystemSettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const admin: any = this.storage.get('admin-data');
+    this.admin = this.storage.get('admin-data') as unknown as IUser;
 
     this.settingsForm.patchValue({
-      name: admin.name,
-      email: admin.email,
-      phone: admin.mobileNumber,
+      name: this.admin.name,
+      email: this.admin.email,
+      mobileNumber: this.admin.mobileNumber,
     });
   }
 
@@ -45,8 +54,26 @@ export class SystemSettingsComponent implements OnInit {
 
   protected onSaveClick() {
     if (this.settingsForm.valid) {
-      this.isEditing = false;
-      console.log('Form Data:', this.settingsForm.value);
+      this.service
+        .updateCustomer(this.admin.id, this.settingsForm.value)
+        .pipe(untilDestroyed(this))
+        .subscribe({
+          next: (res: IResponse) => {
+            showSuccess({
+              title: 'Success',
+              text: 'Your details updated successfully',
+            });
+            this.isEditing = false;
+            this.admin = { ...this.admin, ...this.settingsForm.value };
+            this.storage.set('admin-data',this.admin);
+          },
+          error: () => {
+            showError({
+              title: 'System Error',
+              text: 'Something Went Wrong',
+            });
+          },
+        });
     }
   }
 

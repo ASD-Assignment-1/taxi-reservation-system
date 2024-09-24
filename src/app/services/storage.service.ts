@@ -18,6 +18,7 @@ export class StorageService {
 
   set(key: string, value: any): void {
     if (sessionStorage && window) {
+      sessionStorage.removeItem(window.btoa(key));
       sessionStorage.setItem(
         window.btoa(key),
         window.btoa(JSON.stringify(value))

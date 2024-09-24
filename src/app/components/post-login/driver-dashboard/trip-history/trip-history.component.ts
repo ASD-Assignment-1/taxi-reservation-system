@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { IDriver } from 'src/app/interface/IDriver';
+import { ITrip } from 'src/app/interface/ITrip';
+import { IResponse } from 'src/app/interface/IResponse';
 import { DriverService } from 'src/app/services/driver/driver.service';
+import { StorageService } from 'src/app/services/storage.service';
+import { showError } from 'src/app/utility/helper';
+import { MapService } from 'src/app/services/map/map.service';
+import { Observable, map, switchMap, take } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -9,27 +16,62 @@ import { DriverService } from 'src/app/services/driver/driver.service';
   styleUrls: ['./trip-history.component.scss'],
 })
 export class TripHistoryComponent implements OnInit {
-  trips = [
-    {
-      clientName: 'John Doe',
-      clientNumber: '+1234567890',
-      pickupLocation: '123 Main St, Cityville',
-      dropoffLocation: '456 Elm St, Cityville',
-      pickupLatitude: 37.7749,
-      pickupLongitude: -122.4194,
-      dropoffLatitude: 37.8049,
-      dropoffLongitude: -122.2711,
-      payment: 25.5,
-      rating: 4.5,
-      feedback: 'Great ride! The driver was very friendly.',
-      date: '2021-01-01',
-    },
-  ]; 
+  protected driver: IDriver;
+  protected trips: ITrip[] = [];
 
-  constructor(private service: DriverService) {}
+  public pickUpLocations: { [tripId: string]: Observable<string> } = {};
+  public dropOffLocations: { [tripId: string]: Observable<string> } = {};
+
+  constructor(
+    private service: DriverService,
+    private storage: StorageService,
+    private mapService: MapService
+  ) {}
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    this.driver = this.storage.get('driver-data') as unknown as IDriver;
+    this.service
+      .getAllReservationById(this.driver.id)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          this.trips = res.data;
+        },
+        error: () => {
+          showError({
+            title: 'Trip History',
+            text: 'Your trip history is empty',
+          });
+        },
+      });
+  }
+
+  protected getPickUpLocation(trip: ITrip): Observable<string> {
+    if (!this.pickUpLocations[trip.id]) {
+      this.pickUpLocations[trip.id] = this.mapService
+        .getAddress(trip.pickupLatitude, trip.pickupLongitude)
+        .pipe(
+          take(1), 
+          map((res) => res.display_name),
+          untilDestroyed(this) 
+        );
+    }
+
+    return this.pickUpLocations[trip.id];
+  }
+
+  protected getDropOffLocation(trip: ITrip): Observable<string> {
+    if (!this.dropOffLocations[trip.id]) {
+      this.dropOffLocations[trip.id] = this.mapService
+        .getAddress(trip.dropLatitude, trip.dropLongitude)
+        .pipe(
+          take(1), 
+          map((res) => res.display_name),
+          untilDestroyed(this) 
+        );
+    }
+
+    return this.dropOffLocations[trip.id];
   }
 
   protected getStars(rating: number): string[] {

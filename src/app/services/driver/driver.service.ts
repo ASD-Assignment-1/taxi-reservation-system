@@ -81,7 +81,7 @@ export class DriverService {
 
   changeStatus(id: number, status: DriverStatus): Observable<IResponse> {
     const params = { driverID: id, status: status };
-    return this.httpClient.post<IResponse>(
+    return this.httpClient.get<IResponse>(
       this.baseUrl + '/driver/updateStatus',
       {
         params,
