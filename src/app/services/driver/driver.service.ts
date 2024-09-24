@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DriverStatus } from 'src/app/enums/DriverStatus.enum';
 import { IAddRate } from 'src/app/interface/IAddRate';
+import { IDriver } from 'src/app/interface/IDriver';
 import { IDriverRegister } from 'src/app/interface/IDriverRegister';
 import { IResponse } from 'src/app/interface/IResponse';
 import { NON_SECURE, getEndpoint } from 'src/app/utility/constants/end-point';
@@ -10,8 +11,17 @@ import { NON_SECURE, getEndpoint } from 'src/app/utility/constants/end-point';
 @Injectable()
 export class DriverService {
   private baseUrl = `${getEndpoint(NON_SECURE)}`;
+  private driverListPayload: IDriver[] = [];
 
   constructor(private readonly httpClient: HttpClient) {}
+
+  setDriverPayload(drivers:IDriver[]){
+    this.driverListPayload = drivers;
+  }
+
+  getDriverPayload(){
+    return this.driverListPayload;
+  }
 
   driverRegister(data: IDriverRegister): Observable<IResponse> {
     return this.httpClient.post<IResponse>(this.baseUrl + '/admin/register', {
@@ -60,9 +70,12 @@ export class DriverService {
 
   findDrivers(lng: number, lat: number): Observable<IResponse> {
     const params = { userLatitude: lat, userLongitude: lng };
-    return this.httpClient.get<IResponse>(this.baseUrl + '/driver/nearestDrivers', {
-      params,
-    });
+    return this.httpClient.get<IResponse>(
+      this.baseUrl + '/driver/nearestDrivers',
+      {
+        params,
+      }
+    );
   }
 
   getLast5ReservationById(id: number): Observable<IResponse> {

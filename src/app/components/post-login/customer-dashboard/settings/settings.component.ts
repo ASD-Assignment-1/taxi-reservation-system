@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { IResponse } from 'src/app/interface/IResponse';
+import { IUser } from 'src/app/interface/IUser';
+import { CustomerService } from 'src/app/services/customer/customer.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { showError, showSuccess } from 'src/app/utility/helper';
 
 @UntilDestroy()
 @Component({
@@ -10,10 +14,17 @@ import { StorageService } from 'src/app/services/storage.service';
   styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent implements OnInit {
-  isEditing = false;
-  settingsForm: FormGroup;
-  passwordForm: FormGroup;
-  constructor(private fb: FormBuilder, private storage: StorageService) {
+  protected isEditing = false;
+  protected settingsForm: FormGroup;
+  protected passwordForm: FormGroup;
+
+  protected user: IUser;
+
+  constructor(
+    private fb: FormBuilder,
+    private storage: StorageService,
+    private service: CustomerService
+  ) {
     this.settingsForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', Validators.required],
@@ -28,12 +39,12 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const user: any = this.storage.get('user-data');
+    this.user = this.storage.get('user-data') as unknown as IUser;
 
     this.settingsForm.patchValue({
-      name: user.name,
-      email: user.email,
-      phone: user.mobileNumber,
+      name: this.user.name,
+      email: this.user.email,
+      phone: this.user.mobileNumber,
     });
   }
 
@@ -43,8 +54,26 @@ export class SettingsComponent implements OnInit {
 
   onSaveClick() {
     if (this.settingsForm.valid) {
-      this.isEditing = false;
-      console.log('Form Data:', this.settingsForm.value);
+      this.service
+        .updateCustomer(this.user.id, this.settingsForm.value)
+        .pipe(untilDestroyed(this))
+        .subscribe({
+          next: (res: IResponse) => {
+            showSuccess({
+              title: 'Success',
+              text: 'Your details updated successfully',
+            });
+            this.isEditing = false;
+            this.user = { ...this.user, ...this.settingsForm.value };
+            this.storage.set('user-data', this.user);
+          },
+          error: () => {
+            showError({
+              title: 'System Error',
+              text: 'Something Went Wrong',
+            });
+          },
+        });
     }
   }
 

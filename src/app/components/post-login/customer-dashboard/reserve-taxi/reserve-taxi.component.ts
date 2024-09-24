@@ -1,9 +1,14 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime, map, switchMap } from 'rxjs';
+import { IDriver } from 'src/app/interface/IDriver';
+import { IResponse } from 'src/app/interface/IResponse';
+import { DriverService } from 'src/app/services/driver/driver.service';
 import { MapService } from 'src/app/services/map/map.service';
+import { ReservationService } from 'src/app/services/reservation/reservation.service';
 import { showError } from 'src/app/utility/helper';
 
 @UntilDestroy()
@@ -19,6 +24,8 @@ export class ReserveTaxiComponent implements OnInit {
 
   protected useCurrentLocation = false;
 
+  protected drivers: IDriver[] = [];
+
   protected filteredPickupResults: any[] = [];
   protected filteredDropoffResults: any[] = [];
 
@@ -29,7 +36,14 @@ export class ReserveTaxiComponent implements OnInit {
   protected zoom = 13;
 
   protected form: FormGroup;
-  constructor(private fb: FormBuilder, private mapService: MapService) {
+  constructor(
+    private fb: FormBuilder,
+    private mapService: MapService,
+    protected driverService: DriverService,
+    protected service:ReservationService,
+    private router: Router,
+    protected route:ActivatedRoute
+  ) {
     this.form = this.fb.group({
       pickUp: ['', Validators.required],
       dropOff: ['', Validators.required],
@@ -123,7 +137,6 @@ export class ReserveTaxiComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (res) => {
-
           if (this.form.get('pickupToggle')?.value) {
             this.setPickupLocation(res.display_name, lat, lng);
           }
@@ -153,6 +166,31 @@ export class ReserveTaxiComponent implements OnInit {
         },
       ];
     }
+
+    this.driverService
+      .findDrivers(this.markers[0].position.lng, this.markers[0].position.lat)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          if (!res.data.length) {
+            showError({
+              title: 'Oops',
+              text: 'Currently,There is no any driver in your area.Please try again later',
+            });
+            return;
+          }
+
+          this.driverService.setDriverPayload(res.data);
+          this.service.setMarkers(this.markers);
+          this.router.navigate(['../available-drivers'],{relativeTo:this.route});
+        },
+        error: () => {
+          showError({
+            title: 'System Error',
+            text: 'Something Went Wrong',
+          });
+        },
+      });
   }
 
   protected toRoute(): void {

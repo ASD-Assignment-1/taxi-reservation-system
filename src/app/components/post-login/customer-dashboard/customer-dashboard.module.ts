@@ -22,6 +22,7 @@ import { DriverService } from 'src/app/services/driver/driver.service';
 import { ReservationService } from 'src/app/services/reservation/reservation.service';
 import {MatDialogModule} from '@angular/material/dialog';
 import { MapService } from 'src/app/services/map/map.service';
+import { MoneyPipe } from 'src/app/utility/pipes/money.pipe';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { MapService } from 'src/app/services/map/map.service';
     BookingHistoryComponent,
     SettingsComponent,
     DashboardComponent,
+    MoneyPipe
   ],
   imports: [
     CommonModule,

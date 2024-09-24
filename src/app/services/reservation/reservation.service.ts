@@ -9,8 +9,17 @@ import { NON_SECURE, getEndpoint } from 'src/app/utility/constants/end-point';
 @Injectable()
 export class ReservationService {
   private baseUrl = `${getEndpoint(NON_SECURE)}`;
+  protected markers: any[] = [];
 
   constructor(private readonly httpClient: HttpClient) {}
+
+  setMarkers(markers:any[]){
+    this.markers = markers;
+  }
+
+  getMarkers(){
+    return this.markers;
+  }
 
   makeUserReservation(data: IUserReservation): Observable<IResponse> {
     return this.httpClient.post<IResponse>(this.baseUrl + '/reserve', {
@@ -26,7 +35,7 @@ export class ReservationService {
 
   makePayment(reservationId: number): Observable<IResponse> {
     const params = { reservationId: reservationId.toString() };
-    return this.httpClient.get<IResponse>(this.baseUrl + '/pay', {
+    return this.httpClient.get<IResponse>(this.baseUrl + '/user/pay', {
       params,
     });
   }
@@ -58,7 +67,7 @@ export class ReservationService {
       longitude2: toLng,
     };
     return this.httpClient.get<IResponse>(
-      this.baseUrl + '/driver/allReservation',
+      this.baseUrl + '/user/getAmount',
       {
         params,
       }

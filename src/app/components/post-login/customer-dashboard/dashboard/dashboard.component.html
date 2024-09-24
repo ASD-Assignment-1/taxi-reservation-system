@@ -9,9 +9,17 @@
                 <mat-icon color="primary">history</mat-icon>
                 <h3>Recent Booking History</h3>
                 <ul>
-                    <li *ngFor="let booking of latestBookings">
-                        <mat-icon color="accent">directions_car</mat-icon>
-                        <span>{{ booking.date }} - {{ booking.driver }} - {{ booking.rating }} stars</span>
+                    <li *ngFor="let booking of latestsBookings">
+                        <mat-icon>directions_car</mat-icon>
+                        <span>{{ booking.reveredTime | date:'short' }} - {{ booking.driverName }} <p><mat-icon
+                                    *ngFor="let star of getDriverStars(booking.rating.score)"
+                                    [ngClass]="star === 'filled' ? 'star-filled' : 'star-outline'">
+                                    {{ star === 'filled' ? 'star' : 'star_border' }}
+                                </mat-icon></p> </span>
+                    </li>
+                    <li *ngIf="!latestsBookings.length">
+                        <mat-icon>info</mat-icon>
+                        <span>No Result Found.</span>
                     </li>
                 </ul>
             </div>
@@ -20,9 +28,14 @@
                 <mat-icon color="primary">attach_money</mat-icon>
                 <h3>Latest Trip Rates</h3>
                 <ul>
-                    <li *ngFor="let rate of latestRates">
-                        <mat-icon color="accent">local_offer</mat-icon>
-                        <span>{{ rate.date }} - {{ rate.distance }} km - LKR {{ rate.price }}</span>
+                    <li *ngFor="let rate of latestsBookings">
+                        <mat-icon>local_offer</mat-icon>
+                        <span>{{ rate.reveredTime | date:'short' }} - {{ rate.distance.toFixed(2) }} km - LKR {{
+                            rate.amount }}</span>
+                    </li>
+                    <li *ngIf="!latestsBookings.length">
+                        <mat-icon>info</mat-icon>
+                        <span>No Result Found.</span>
                     </li>
                 </ul>
             </div>
@@ -36,7 +49,7 @@
             <button routerLink="../reserve-taxi" mat-fab extended color="primary">
                 <mat-icon>book_online</mat-icon> Reserve a Ride
             </button>
-            <button routerLink="../booking-history"  mat-fab extended color="primary">
+            <button routerLink="../booking-history" mat-fab extended color="primary">
                 <mat-icon>history</mat-icon> View Booking History
             </button>
             <button routerLink="../settings" mat-fab extended color="primary">

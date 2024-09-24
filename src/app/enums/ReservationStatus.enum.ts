@@ -1,4 +1,4 @@
 export enum ReservationStatus {
-  START = 'Start',
-  END = 'End',
+  START = 'START',
+  END = 'END',
 }

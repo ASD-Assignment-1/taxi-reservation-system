@@ -3,63 +3,45 @@
 
     <mat-accordion>
         <!-- Ongoing Trips Section -->
-        <mat-expansion-panel *ngFor="let trip of ongoingTrips" class="ongoing-trip">
+        <mat-expansion-panel *ngFor="let trip of trips"
+            [ngClass]="trip.status===ReservationStatus.START  ? 'ongoing-trip' : 'completed-trip'">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <div class="trip-header">
-                        <span class="ongoing">Ongoing Trip</span>
+                        <span *ngIf="trip.status===ReservationStatus.START" class="ongoing">Ongoing Trip</span>
+                        <span *ngIf="trip.status===ReservationStatus.END" class="complete">Completed Trip</span>
                     </div>
                 </mat-panel-title>
-                <mat-panel-description> Amount: LKR {{ trip.amount }} </mat-panel-description>
+                <mat-panel-description> Amount: LKR {{ trip.amount | money}} </mat-panel-description>
             </mat-expansion-panel-header>
 
             <div class="trip-details">
-                <img [src]="trip.driver.image" alt="Driver Image" class="driver-image" />
-                <p><strong>Driver:</strong><mat-icon *ngFor="let star of getDriverStars(trip.driver.rating)"
+                <img [src]="trip.driverImage" alt="Driver Image" class="driver-image" />
+                <p *ngIf="trip.rating"><strong>Driver:</strong><mat-icon
+                        *ngFor="let star of getDriverStars(trip.rating.score)"
                         [ngClass]="star === 'filled' ? 'star-filled' : 'star-outline'">
                         {{ star === 'filled' ? 'star' : 'star_border' }}
-                    </mat-icon>({{trip.driver.rating}})</p>
-                <p><strong>Pickup:</strong> {{ trip.pickup }}</p>
-                <p><strong>Drop-off:</strong> {{ trip.dropoff }}</p>
+                    </mat-icon>({{trip.rating.review}})</p>
+                <p><strong>Driver Name:</strong> {{ trip.driverName }}</p>
+                <p><strong>Reserved Time:</strong> {{ trip.reveredTime | date:'short' }}</p>
+                <p><strong>Pickup:</strong> {{ getPickUpLocation(trip) | async }}</p>
+                <p><strong>Drop-off:</strong> {{ getDropOffLocation(trip) | async }}</p>
                 <p><strong>Status:</strong> {{ trip.status }}</p>
-                <button mat-raised-button color="accent" (click)="payForTrip(trip,rateDriverModal)">Pay</button>
-            </div>
-        </mat-expansion-panel>
-
-        <!-- Completed Trips Section -->
-        <mat-expansion-panel *ngFor="let trip of completedTrips" class="completed-trip">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <div class="trip-header">
-                        <span class="complete">Completed Trip</span>
-                    </div>
-                </mat-panel-title>
-                <mat-panel-description> Amount: LKR {{ trip.amount }} </mat-panel-description>
-            </mat-expansion-panel-header>
-
-            <div class="trip-details">
-                <img [src]="trip.driver.image" alt="Driver Image" class="driver-image" />
-                <p><strong>Driver:</strong><mat-icon *ngFor="let star of getDriverStars(trip.driver.rating)"
-                        [ngClass]="star === 'filled' ? 'star-filled' : 'star-outline'">
-                        {{ star === 'filled' ? 'star' : 'star_border' }}
-                    </mat-icon>({{trip.driver.rating}})</p>
-                <p><strong>Pickup:</strong> {{ trip.pickup }}</p>
-                <p><strong>Drop-off:</strong> {{ trip.dropoff }}</p>
-                <p><strong>Status:</strong> {{ trip.status }}</p>
+                <button *ngIf="trip.status===ReservationStatus.START" mat-raised-button color="accent"
+                    (click)="payForTrip(trip,rateDriverModal)">Pay</button>
             </div>
         </mat-expansion-panel>
     </mat-accordion>
 
-      
+
 </div>
 
 <!-- Rating Modal -->
 <ng-template #rateDriverModal>
     <div class="rate-driver-modal">
         <h3>Rate Your Driver</h3>
-        <img [src]="selectedDriver?.image" alt="Driver Image" class="modal-driver-image" />
-        <p><strong>Name:</strong> {{ selectedDriver?.name }}</p>
-        <p><strong>Email:</strong> {{ selectedDriver?.email }}</p>
+        <img [src]="driverImage" alt="Driver Image" class="modal-driver-image" />
+        <p><strong>Name:</strong> {{ driverName }}</p>
         <div class="star-rating">
             <mat-icon *ngFor="let star of [1, 2, 3, 4, 5]" (click)="rateDriver(star)"
                 [ngClass]="selectedRating >= star ? 'star-filled' : 'star-outline'">

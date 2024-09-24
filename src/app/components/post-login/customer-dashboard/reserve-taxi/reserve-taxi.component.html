@@ -37,12 +37,12 @@
 
   <!-- Buttons Container -->
   <div class="buttons-container">
-    <button mat-raised-button color="primary" (click)="toRoute()">
+    <button [disabled]="form.invalid" mat-raised-button color="primary" (click)="toRoute()">
       <mat-icon>directions</mat-icon>
       Get Directions
     </button>
 
-    <button mat-raised-button color="primary" (click)="searchDrivers()">
+    <button [disabled]="form.invalid" mat-raised-button color="primary" (click)="searchDrivers()">
       <mat-icon>search</mat-icon>
       Search for Drivers
     </button>
