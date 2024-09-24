@@ -13,7 +13,7 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 
 @NgModule({
   declarations: [
-    CustomerDashboardComponent,
+    CustomerDashboardComponent, 
     DriverDashboardComponent,
     AdminDashboardComponent,
   ],

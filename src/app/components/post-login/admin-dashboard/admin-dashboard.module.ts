@@ -28,6 +28,7 @@ import { DriverService } from 'src/app/services/driver/driver.service';
 import { CustomerService } from 'src/app/services/customer/customer.service';
 import { ReservationService } from 'src/app/services/reservation/reservation.service';
 import { MapService } from 'src/app/services/map/map.service';
+import { SharedModule } from '../../shared/shared.module';
 @NgModule({
   declarations: [
     UserManagementComponent,
@@ -52,7 +53,8 @@ import { MapService } from 'src/app/services/map/map.service';
     MatTableModule,
     MatDialogModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    SharedModule
   ],
   providers:[
     DriverService,

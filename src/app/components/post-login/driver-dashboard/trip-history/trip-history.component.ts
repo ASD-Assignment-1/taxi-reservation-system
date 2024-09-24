@@ -19,8 +19,8 @@ export class TripHistoryComponent implements OnInit {
   protected driver: IDriver;
   protected trips: ITrip[] = [];
 
-  public pickUpLocations: { [tripId: string]: Observable<string> } = {};
-  public dropOffLocations: { [tripId: string]: Observable<string> } = {};
+  protected pickUpLocations: { [tripId: string]: Observable<string> } = {};
+  protected dropOffLocations: { [tripId: string]: Observable<string> } = {};
 
   constructor(
     private service: DriverService,

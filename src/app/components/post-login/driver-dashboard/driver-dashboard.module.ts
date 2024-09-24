@@ -16,15 +16,15 @@ import { MatInputModule } from '@angular/material/input';
 import { DriverService } from 'src/app/services/driver/driver.service';
 import { CustomerService } from 'src/app/services/customer/customer.service';
 import { ReservationService } from 'src/app/services/reservation/reservation.service';
-import { MoneyPipe } from 'src/app/utility/pipes/money.pipe';
 import { MapService } from 'src/app/services/map/map.service';
+import { SharedModule } from '../../shared/shared.module';
+
 @NgModule({
   declarations: [
     StatusToggleComponent,
     CurrentTripComponent,
     TripHistoryComponent,
     SettingsComponent,
-    MoneyPipe
   ],
   imports: [
     CommonModule,
@@ -36,7 +36,8 @@ import { MapService } from 'src/app/services/map/map.service';
     MatExpansionModule,
     MatButtonModule,
     MatInputModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ],
   providers:[
     DriverService,
