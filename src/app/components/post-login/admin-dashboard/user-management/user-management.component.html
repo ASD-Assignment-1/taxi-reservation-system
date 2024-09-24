@@ -91,16 +91,16 @@
         <div class="trip-list">
             <div *ngFor="let trip of tripList" class="trip-item">
                 <div class="trip-info">
-                    <p><strong>Pickup:</strong> {{ trip.pickupLocation }}</p>
-                    <p><strong>Drop-off:</strong> {{ trip.dropoffLocation }}</p>
+                    <p><strong>Pickup:</strong> {{ getPickUpLocation(trip) | async }}</p>
+                    <p><strong>Drop-off:</strong> {{ getDropOffLocation(trip) | async }}</p>
                 </div>
                 <div class="driver-info">
                     <p><strong>Driver:</strong> {{ trip.driverName }}</p>
-                    <p><strong>Mobile:</strong> {{ trip.driverMobile }}</p>
+                    <p><strong>Distance:</strong> {{ trip.distance | money }} Km</p>
                 </div>
                 <div class="trip-review">
-                    <p><strong>Review Score:</strong> {{ trip.reviewScore }}/5</p>
-                    <p><strong>Payment:</strong> LKR {{ trip.payment | number: '1.2-2' }}</p>
+                    <p><strong>Review Score:</strong> {{ trip.rating.score }}/5</p>
+                    <p><strong>Payment:</strong> LKR {{ trip.amount | money }}</p>
                 </div>
             </div>
         </div>

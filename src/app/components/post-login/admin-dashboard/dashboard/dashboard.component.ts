@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime, map, switchMap } from 'rxjs';
 import { IAdminReservation } from 'src/app/interface/IAdminReservation';
+import { IBookingHistory } from 'src/app/interface/IBookingHistory';
 import { IDriver } from 'src/app/interface/IDriver';
 import { IResponse } from 'src/app/interface/IResponse';
 import { CustomerService } from 'src/app/services/customer/customer.service';
@@ -34,14 +35,8 @@ export class DashboardComponent {
   protected filteredDropoffResults: any[] = [];
 
   protected drivers: IDriver[] = [];
+  protected recentPayments:IBookingHistory[]=[];
 
-  //need to check
-  recentPayments: {
-    clientName: string;
-    tripId: string;
-    amount: number;
-    date: Date;
-  }[] = [];
 
   protected reservationForm: FormGroup;
   constructor(
@@ -160,35 +155,14 @@ export class DashboardComponent {
       });
   }
 
-  //need to implement
   protected loadRecentPayments(): void {
-    this.recentPayments = [
-      {
-        clientName: 'John Doe',
-        tripId: 'TR123',
-        amount: 1500,
-        date: new Date('2024-09-11T14:30:00'),
-      },
-      {
-        clientName: 'Jane Smith',
-        tripId: 'TR124',
-        amount: 2500,
-        date: new Date('2024-09-12T10:15:00'),
-      },
-      {
-        clientName: 'David Lee',
-        tripId: 'TR125',
-        amount: 1000,
-        date: new Date('2024-09-12T12:45:00'),
-      },
-    ];
-
+    
     this.service
       .getLast5Reservations()
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (res: IResponse) => {
-          this.drivers = res.data;
+          this.recentPayments = res.data;
         },
         error: () => {
           showError({

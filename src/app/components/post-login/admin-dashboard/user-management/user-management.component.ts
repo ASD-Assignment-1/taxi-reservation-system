@@ -7,9 +7,12 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Observable, map, take } from 'rxjs';
+import { IBookingHistory } from 'src/app/interface/IBookingHistory';
 import { IResponse } from 'src/app/interface/IResponse';
 import { IUser } from 'src/app/interface/IUser';
 import { CustomerService } from 'src/app/services/customer/customer.service';
+import { MapService } from 'src/app/services/map/map.service';
 import { showError, showQuestion, showSuccess } from 'src/app/utility/helper';
 
 @UntilDestroy()
@@ -36,7 +39,10 @@ export class UserManagementComponent implements OnInit {
 
   protected tripList: any[] = [];
 
-  constructor(private dialog: MatDialog, private service: CustomerService) {}
+  protected pickUpLocations: { [tripId: string]: Observable<string> } = {};
+  protected dropOffLocations: { [tripId: string]: Observable<string> } = {};
+
+  constructor(private dialog: MatDialog, private service: CustomerService,private mapService:MapService) {}
 
   ngOnInit(): void {
     this.loadCustomerData();
@@ -74,7 +80,6 @@ export class UserManagementComponent implements OnInit {
             });
             return;
           }
-          //need to implement
           this.tripList = res.data;
           this.dialog.open(dialogRef);
         },
@@ -140,5 +145,33 @@ export class UserManagementComponent implements OnInit {
           });
         },
       });
+  }
+
+  protected getPickUpLocation(trip: IBookingHistory): Observable<string> {
+    if (!this.pickUpLocations[trip.id]) {
+      this.pickUpLocations[trip.id] = this.mapService
+        .getAddress(trip.pickupLatitude, trip.pickupLongitude)
+        .pipe(
+          take(1), 
+          map((res) => res.display_name),
+          untilDestroyed(this) 
+        );
+    }
+
+    return this.pickUpLocations[trip.id];
+  }
+
+  protected getDropOffLocation(trip: IBookingHistory): Observable<string> {
+    if (!this.dropOffLocations[trip.id]) {
+      this.dropOffLocations[trip.id] = this.mapService
+        .getAddress(trip.dropLatitude, trip.dropLongitude)
+        .pipe(
+          take(1), 
+          map((res) => res.display_name),
+          untilDestroyed(this) 
+        );
+    }
+
+    return this.dropOffLocations[trip.id];
   }
 }

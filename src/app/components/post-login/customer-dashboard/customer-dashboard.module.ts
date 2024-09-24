@@ -20,9 +20,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { CustomerService } from 'src/app/services/customer/customer.service';
 import { DriverService } from 'src/app/services/driver/driver.service';
 import { ReservationService } from 'src/app/services/reservation/reservation.service';
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MapService } from 'src/app/services/map/map.service';
-import { MoneyPipe } from 'src/app/utility/pipes/money.pipe';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -31,7 +31,6 @@ import { MoneyPipe } from 'src/app/utility/pipes/money.pipe';
     BookingHistoryComponent,
     SettingsComponent,
     DashboardComponent,
-    MoneyPipe
   ],
   imports: [
     CommonModule,
@@ -47,8 +46,9 @@ import { MoneyPipe } from 'src/app/utility/pipes/money.pipe';
     MatSlideToggleModule,
     MatCardModule,
     MatExpansionModule,
-    MatDialogModule
+    MatDialogModule,
+    SharedModule
   ],
-  providers: [DriverService, CustomerService, ReservationService,MapService],
+  providers: [DriverService, CustomerService, ReservationService, MapService],
 })
 export class CustomerDashboardModule {}

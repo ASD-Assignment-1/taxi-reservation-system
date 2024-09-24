@@ -3,11 +3,14 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Observable, map, take } from 'rxjs';
 import { DriverStatus } from 'src/app/enums/DriverStatus.enum';
+import { IBookingHistory } from 'src/app/interface/IBookingHistory';
 import { IDriver } from 'src/app/interface/IDriver';
 import { IDriverRegister } from 'src/app/interface/IDriverRegister';
 import { IResponse } from 'src/app/interface/IResponse';
 import { DriverService } from 'src/app/services/driver/driver.service';
+import { MapService } from 'src/app/services/map/map.service';
 import { DRIVER_INIT_IMAGE } from 'src/app/utility/constants/common-constant';
 import { showError, showQuestion, showSuccess } from 'src/app/utility/helper';
 
@@ -41,11 +44,14 @@ export class DriverManagementComponent implements OnInit {
   protected tripList: any[] = [];
 
   protected editingDriver: boolean = false;
+  protected pickUpLocations: { [tripId: string]: Observable<string> } = {};
+  protected dropOffLocations: { [tripId: string]: Observable<string> } = {};
 
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
-    private service: DriverService
+    private service: DriverService,
+    private mapService: MapService
   ) {
     this.form = this.fb.group({
       name: ['', Validators.required],
@@ -246,5 +252,33 @@ export class DriverManagementComponent implements OnInit {
           });
         },
       });
+  }
+
+  protected getPickUpLocation(trip: IBookingHistory): Observable<string> {
+    if (!this.pickUpLocations[trip.id]) {
+      this.pickUpLocations[trip.id] = this.mapService
+        .getAddress(trip.pickupLatitude, trip.pickupLongitude)
+        .pipe(
+          take(1), 
+          map((res) => res.display_name),
+          untilDestroyed(this) 
+        );
+    }
+
+    return this.pickUpLocations[trip.id];
+  }
+
+  protected getDropOffLocation(trip: IBookingHistory): Observable<string> {
+    if (!this.dropOffLocations[trip.id]) {
+      this.dropOffLocations[trip.id] = this.mapService
+        .getAddress(trip.dropLatitude, trip.dropLongitude)
+        .pipe(
+          take(1), 
+          map((res) => res.display_name),
+          untilDestroyed(this) 
+        );
+    }
+
+    return this.dropOffLocations[trip.id];
   }
 }
