@@ -8,7 +8,11 @@ import { IResponse } from 'src/app/interface/IResponse';
 import { DriverService } from 'src/app/services/driver/driver.service';
 import { MapService } from 'src/app/services/map/map.service';
 import { StorageService } from 'src/app/services/storage.service';
-import { showError } from 'src/app/utility/helper';
+import { showError, showQuestion, showSuccess } from 'src/app/utility/helper';
+import { UserRoles } from 'src/app/enums/UserRoles.enum';
+import { CustomerService } from 'src/app/services/customer/customer.service';
+import { ReservationService } from 'src/app/services/reservation/reservation.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @UntilDestroy()
 @Component({
@@ -18,15 +22,19 @@ import { showError } from 'src/app/utility/helper';
 })
 export class CurrentTripComponent implements OnInit {
   protected driver: IDriver;
+  protected UserRoles = UserRoles;
 
   protected trip: ITrip;
-  protected pickUpLocation:string;
-  protected dropOffLocation:string;
+  protected pickUpLocation: string;
+  protected dropOffLocation: string;
 
   constructor(
     private service: DriverService,
+    private reservationService: ReservationService,
     private storage: StorageService,
-    private mapService: MapService
+    private mapService: MapService,
+    private router:Router,
+    private route:ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -53,12 +61,11 @@ export class CurrentTripComponent implements OnInit {
       });
   }
 
-  protected getPickUpLocation(){
-     this.mapService
+  protected getPickUpLocation() {
+    this.mapService
       .getAddress(this.trip.pickupLatitude, this.trip.pickupLongitude)
-      .pipe(
-        untilDestroyed(this)
-      ).subscribe({
+      .pipe(untilDestroyed(this))
+      .subscribe({
         next: (res) => {
           this.pickUpLocation = res.display_name;
         },
@@ -68,15 +75,14 @@ export class CurrentTripComponent implements OnInit {
             text: 'Location Fetching Failed.Try Again Later',
           });
         },
-      })
+      });
   }
 
-  protected getDropOffLocation(){
-     this.mapService
+  protected getDropOffLocation() {
+    this.mapService
       .getAddress(this.trip.dropLatitude, this.trip.dropLongitude)
-      .pipe(
-        untilDestroyed(this)
-      ).subscribe({
+      .pipe(untilDestroyed(this))
+      .subscribe({
         next: (res) => {
           this.dropOffLocation = res.display_name;
         },
@@ -86,7 +92,38 @@ export class CurrentTripComponent implements OnInit {
             text: 'Location Fetching Failed.Try Again Later',
           });
         },
-      })
+      });
+  }
+
+  protected endTrip() {
+    showQuestion(
+      {
+        title: 'End Trip',
+        text: 'Have you arrived at your destination?',
+      },
+      (isConfirmed) => {
+        if (isConfirmed) {
+          this.reservationService
+            .makePayment(this.trip.id)
+            .pipe(untilDestroyed(this))
+            .subscribe({
+              next: (res: IResponse) => {
+                showSuccess({
+                  title: 'Success',
+                  text: 'Trip complete successfully',
+                });
+                this.router.navigate(['../dashboard'], { relativeTo: this.route });
+              },
+              error: () => {
+                showError({
+                  title: 'System Error',
+                  text: 'Something Went Wrong',
+                });
+              },
+            });
+        }
+      }
+    );
   }
 
   getGoogleMapsUrl(): string {

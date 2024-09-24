@@ -37,18 +37,18 @@
                         </div>
                     </div>
 
-                    <div class="review-section">
-                        <!-- <div class="rating">
-                            <mat-icon *ngFor="let star of getStars(trip.rating)"
+                    <div *ngIf="trip.ratingDto" class="review-section">
+                        <div class="rating">
+                            <mat-icon *ngFor="let star of getStars(trip.ratingDto.score)"
                                       [ngClass]="star === 'filled' ? 'star-filled' : 'star-outline'">
                                 {{ star === 'filled' ? 'star' : 'star_border' }}
                             </mat-icon>
-                            <span>({{ trip.rating }})</span>
+                            <span>({{ trip.ratingDto.score }})</span>
                         </div>
                         <div class="feedback">
                             <mat-icon>rate_review</mat-icon>
-                            <span>Review: "{{ trip.feedback }}"</span>
-                        </div> -->
+                            <span>Review: "{{ trip.ratingDto.review }}"</span>
+                        </div>
                     </div>
                 </div>
             </mat-card-content>

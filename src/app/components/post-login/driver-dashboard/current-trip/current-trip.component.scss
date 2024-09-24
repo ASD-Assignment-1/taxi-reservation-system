@@ -118,6 +118,18 @@ button:hover {
     background-color: #0056b3;
 }
 
+button.end-trip-button {
+    margin-top: 20px;
+    width: 100%;
+    color: #fff;
+    background-color: #fbc02d;
+    transition: background-color 0.3s ease;
+}
+
+button.end-trip-button:hover {
+    background-color: #0056b3;
+}
+
 .empty-booking-message mat-icon {
     margin-bottom: 10px;
     color: #999;

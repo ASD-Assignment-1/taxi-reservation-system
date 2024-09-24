@@ -1,4 +1,5 @@
 import { ReservationStatus } from "../enums/ReservationStatus.enum";
+import { IRate } from "./IRate";
 import { IUser } from "./IUser";
 
 export interface ITrip {
@@ -12,4 +13,5 @@ export interface ITrip {
   dropLatitude: number;
   dropLongitude: number;
   status: ReservationStatus;
+  ratingDto:IRate;
 }

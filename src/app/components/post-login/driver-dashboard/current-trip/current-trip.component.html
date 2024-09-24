@@ -21,14 +21,14 @@
                     <mat-icon>location_on</mat-icon>
                     <div>
                         <span class="detail-label">Pickup Location:</span>
-                        <span class="detail-value">{{ pickUpLocation   }}</span>
+                        <span class="detail-value">{{ pickUpLocation }}</span>
                     </div>
                 </div>
                 <div class="detail-item">
                     <mat-icon>location_on</mat-icon>
                     <div>
                         <span class="detail-label">Dropoff Location:</span>
-                        <span class="detail-value">{{dropOffLocation  }}</span>
+                        <span class="detail-value">{{dropOffLocation }}</span>
                     </div>
                 </div>
                 <div class="detail-item">
@@ -44,6 +44,10 @@
                         <span class="detail-label">Directions:</span>
                         <a [href]="getGoogleMapsUrl()" target="_blank" class="map-link">View Route on Google Maps</a>
                     </div>
+                </div>
+
+                <div *ngIf="trip.userDto.userStatus===UserRoles.GUEST" class="button-container">
+                    <button mat-raised-button class="end-trip-button" (click)="endTrip()">End Trip</button>
                 </div>
             </div>
             <!-- No Booking Message -->
