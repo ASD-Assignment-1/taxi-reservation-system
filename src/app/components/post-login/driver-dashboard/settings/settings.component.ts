@@ -83,7 +83,11 @@ export class SettingsComponent implements OnInit {
               text: 'Your details updated successfully',
             });
             this.isEditing = false;
-            this.driver = { ...this.driver, ...this.settingsForm.value };
+            this.driver = {
+              ...this.driver,
+              ...this.settingsForm.value,
+              profileImage: this.imageURL,
+            };
             this.storage.set('driver-data', this.driver);
           },
           error: () => {
@@ -143,12 +147,21 @@ export class SettingsComponent implements OnInit {
 
   protected onProfilePictureChange(event: any) {
     const file = event.target.files[0];
+
+    if (file.size > 100000) {
+      showError({
+        title: 'Image Size Exceeded',
+        text: 'Maximum size of the attachment shall be 100kb',
+      });
+      event.target.value = '';
+      return;
+    }
+
     if (file) {
       const reader = new FileReader();
 
       reader.onload = () => {
         const base64String = reader.result as string;
-        console.log(base64String);
         this.imageURL = base64String;
       };
 

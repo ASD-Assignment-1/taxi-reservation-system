@@ -37,12 +37,12 @@
             <mat-card class="driver-card-content">
                 <img mat-card-image [src]="driver.profileImage" alt="{{ driver.name }}">
                 <mat-card-title>{{ driver.name }}</mat-card-title>
-                <!-- <mat-card-subtitle>Rating:
-                    <mat-icon *ngFor="let star of getStars(driver.rate)"
+                <mat-card-subtitle>Rating:
+                    <mat-icon *ngFor="let star of getStars(driver.averageScore)"
                         [ngClass]="star === 'filled' ? 'star-filled' : 'star-outline'">
                         {{ star === 'filled' ? 'star' : 'star_border' }}
-                    </mat-icon>({{driver.rate}})
-                </mat-card-subtitle> -->
+                    </mat-icon>({{driver.averageScore}})
+                </mat-card-subtitle>
                 <button *ngIf="isSummary" mat-raised-button color="primary" (click)="reserveDriver(driver)">Reserve</button>
             </mat-card>
         </div>

@@ -12,4 +12,5 @@ export interface IDriver {
   status: DriverStatus;
   lastLogInDate: string;
   lastLogOutDate: string;
+  averageScore:number;
 }

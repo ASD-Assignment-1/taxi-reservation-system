@@ -29,6 +29,8 @@
                 <p><strong>Status:</strong> {{ trip.status }}</p>
                 <button *ngIf="trip.status===ReservationStatus.START" mat-raised-button color="accent"
                     (click)="payForTrip(trip,rateDriverModal)">Pay</button>
+                <button *ngIf="!trip.rating" mat-raised-button color="accent"
+                    (click)="addReview(trip,rateDriverModal)">Add Review</button>
             </div>
         </mat-expansion-panel>
     </mat-accordion>
