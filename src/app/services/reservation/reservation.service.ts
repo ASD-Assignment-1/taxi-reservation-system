@@ -77,13 +77,13 @@ export class ReservationService {
     );
   }
 
-  getPaymentDetails(from: string, to: string): Observable<IResponse> {
+  reservationFilter(from: string, to: string): Observable<IResponse> {
     const params = {
       fromDate: from,
       toDate: to,
     };
     return this.httpClient.get<IResponse>(
-      this.baseUrl + '/admin/paymentDetails',
+      this.baseUrl + '/reserve/filteredReservation',
       {
         params,
       }

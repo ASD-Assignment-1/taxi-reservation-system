@@ -27,31 +27,39 @@
             <!-- Columns definitions -->
             <ng-container matColumnDef="date">
                 <th mat-header-cell *matHeaderCellDef> Date </th>
-                <td mat-cell *matCellDef="let data"> {{ data.date | date:'shortDate' }} </td>
+                <td mat-cell *matCellDef="let data"> {{ data.reveredTime | date:'shortDate' }} </td>
             </ng-container>
            
             <ng-container matColumnDef="driverName">
                 <th mat-header-cell *matHeaderCellDef> Driver Name </th>
-                <td mat-cell *matCellDef="let data"> {{ data.driverName }} </td>
+                <td mat-cell *matCellDef="let data"> {{ data.driverDto.name }} </td>
             </ng-container>
            
-            <ng-container matColumnDef="paymentStatus">
-                <th mat-header-cell *matHeaderCellDef> Payment Status </th>
-                <td mat-cell *matCellDef="let data">
-                    <span class="status-badge" [ngClass]="{'pending': data.paymentStatus === 'Pending', 'completed': data.paymentStatus === 'Completed', 'failed': data.paymentStatus === 'Failed'}">
-                        {{ data.paymentStatus }}
-                    </span>
-                </td>
+            <ng-container matColumnDef="clientName">
+                <th mat-header-cell *matHeaderCellDef> Client Name </th>
+                <td mat-cell *matCellDef="let data"> {{ data.userDto.name }} </td>
             </ng-container>
+
+            <ng-container matColumnDef="clientStatus">
+                <th mat-header-cell *matHeaderCellDef>Client Status </th>
+                <td mat-cell *matCellDef="let data">
+                  <span [ngClass]="{
+                        'badge-guest': data.userDto.userStatus === UserRoles.GUEST,
+                        'badge-registered':data.userDto.userStatus === UserRoles.USER,
+                      }">
+                    {{ data.userDto.userStatus }}
+                  </span>
+                </td>
+              </ng-container>
            
             <ng-container matColumnDef="paymentTime">
                 <th mat-header-cell *matHeaderCellDef> Payment Time </th>
-                <td mat-cell *matCellDef="let data"> {{ data.paymentTime | date:'shortTime' }} </td>
+                <td mat-cell *matCellDef="let data"> {{ data.reveredTime | date:'shortTime' }} </td>
             </ng-container>
            
             <ng-container matColumnDef="amount">
                 <th mat-header-cell *matHeaderCellDef> Amount </th>
-                <td mat-cell *matCellDef="let data"> LKR {{ data.amount | number: '1.2-2' }} </td>
+                <td mat-cell *matCellDef="let data"> LKR {{ data.paymentAmount | money }} </td>
             </ng-container>
            
             <ng-container matColumnDef="actions">

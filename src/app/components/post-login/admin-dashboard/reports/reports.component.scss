@@ -51,7 +51,8 @@
 }
 
 
-th, td {
+th,
+td {
     padding: 12px;
     text-align: left;
 }
@@ -92,6 +93,19 @@ th, td {
 }
 
 
+/* Badge styles */
+.badge-guest {
+    background-color: #ffc107;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-weight: bold;
+}
 
-
-
+.badge-registered {
+    background-color: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-weight: bold;
+}
