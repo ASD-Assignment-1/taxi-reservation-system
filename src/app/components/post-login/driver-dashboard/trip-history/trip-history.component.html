@@ -8,6 +8,9 @@
 
     <div *ngFor="let trip of trips" class="trip-card">
         <mat-card>
+            <div class="user-badge" [ngClass]="trip.userDto.userStatus===UserRoles.GUEST ? 'guest' : 'registered'">
+                {{ trip.userDto.userStatus===UserRoles.GUEST ? 'Guest User' : 'Registered User' }}
+            </div>
             <mat-card-header>
                 <mat-card-title>{{ trip.userDto.name }}</mat-card-title>
                 <mat-card-subtitle>Phone: {{ trip.userDto.mobileNumber }}</mat-card-subtitle>

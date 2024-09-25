@@ -8,6 +8,7 @@ import { StorageService } from 'src/app/services/storage.service';
 import { showError } from 'src/app/utility/helper';
 import { MapService } from 'src/app/services/map/map.service';
 import { Observable, map, switchMap, take } from 'rxjs';
+import { UserRoles } from 'src/app/enums/UserRoles.enum';
 
 @UntilDestroy()
 @Component({
@@ -16,6 +17,7 @@ import { Observable, map, switchMap, take } from 'rxjs';
   styleUrls: ['./trip-history.component.scss'],
 })
 export class TripHistoryComponent implements OnInit {
+  protected UserRoles = UserRoles;
   protected driver: IDriver;
   protected trips: ITrip[] = [];
 

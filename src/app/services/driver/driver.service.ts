@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DriverStatus } from 'src/app/enums/DriverStatus.enum';
 import { IAddRate } from 'src/app/interface/IAddRate';
+import { IChangePassword } from 'src/app/interface/IChangePassword';
 import { IDriver } from 'src/app/interface/IDriver';
 import { IDriverRegister } from 'src/app/interface/IDriverRegister';
 import { IResponse } from 'src/app/interface/IResponse';
@@ -150,5 +151,11 @@ export class DriverService {
         params,
       }
     );
+  }
+
+  changePassword(data: IChangePassword): Observable<IResponse> {
+    return this.httpClient.post<IResponse>(this.baseUrl + '/driver/changePassword', {
+      ...data,
+    });
   }
 }

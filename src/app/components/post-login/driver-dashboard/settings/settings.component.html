@@ -78,7 +78,7 @@
 
                 <!-- Change Password Button -->
                 <div class="action-buttons">
-                    <button mat-raised-button color="primary" (click)="onChangePasswordClick()">Change Password</button>
+                    <button mat-raised-button color="primary" [disabled]="passwordForm.invalid" (click)="onChangePasswordClick()">Change Password</button>
                 </div>
             </form>
         </div>

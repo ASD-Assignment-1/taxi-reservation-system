@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { IChangePassword } from 'src/app/interface/IChangePassword';
 import { IResponse } from 'src/app/interface/IResponse';
 import { IUserRegister } from 'src/app/interface/IUserRegister';
 import { NON_SECURE, getEndpoint } from 'src/app/utility/constants/end-point';
@@ -55,6 +56,12 @@ export class CustomerService {
   getAllReservationById(id: number): Observable<IResponse> {
     const params = { userID: id };
     return this.httpClient.get<IResponse>(this.baseUrl + '/user/allReservation', { params });
+  }
+
+  changePassword(data: IChangePassword): Observable<IResponse> {
+    return this.httpClient.post<IResponse>(this.baseUrl + '/user/changePassword', {
+      ...data,
+    });
   }
 
 }

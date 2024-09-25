@@ -108,6 +108,24 @@ button {
     width: 100%;
 }
 
+.user-badge {
+    position: relative;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.user-badge.guest {
+    background-color: #ff9800; /* Orange for guest users */
+}
+
+.user-badge.registered {
+    background-color: #4caf50; /* Green for registered users */
+}
+
 @media (max-width: 600px) {
     .trip-history-container {
         padding: 10px;

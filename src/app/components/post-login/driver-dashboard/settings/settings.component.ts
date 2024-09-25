@@ -1,7 +1,10 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DriverStatus } from 'src/app/enums/DriverStatus.enum';
+import { IChangePassword } from 'src/app/interface/IChangePassword';
 import { IDriver } from 'src/app/interface/IDriver';
 import { IResponse } from 'src/app/interface/IResponse';
 import { DriverService } from 'src/app/services/driver/driver.service';
@@ -27,7 +30,8 @@ export class SettingsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private storage: StorageService,
-    private service: DriverService
+    private service: DriverService,
+    private router: Router
   ) {
     this.settingsForm = this.fb.group({
       name: ['', Validators.required],
@@ -93,7 +97,48 @@ export class SettingsComponent implements OnInit {
   }
 
   protected onChangePasswordClick() {
-    // Change password logic here
+    const { newPassword, confirmPassword, currentPassword } =
+      this.passwordForm.value;
+    if (newPassword !== confirmPassword) {
+      showError({
+        title: 'Verification Error',
+        text: 'Password does not match.Try Again',
+      });
+      return;
+    }
+
+    const changePasswordRequest: IChangePassword = {
+      id: this.driver.id,
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    };
+    this.service
+      .changePassword(changePasswordRequest)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          showSuccess({
+            title: 'Success',
+            text: 'Password Change Successfully.Please Login again',
+          });
+
+          this.storage.clearAll();
+          this.router.navigate(['/login']);
+        },
+        error: (err: HttpErrorResponse) => {
+          if (err.error.code === 400) {
+            showError({
+              title: 'System Error',
+              text: err.error.data,
+            });
+          } else {
+            showError({
+              title: 'System Error',
+              text: 'Something Went Wrong',
+            });
+          }
+        },
+      });
   }
 
   protected onProfilePictureChange(event: any) {
