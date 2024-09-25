@@ -9,11 +9,11 @@ import { NON_SECURE, getEndpoint } from 'src/app/utility/constants/end-point';
 @Injectable()
 export class ReservationService {
   private baseUrl = `${getEndpoint(NON_SECURE)}`;
-  protected markers: any[] = [];
+  protected markers: any[] | null= [];
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  setMarkers(markers:any[]){
+  setMarkers(markers:any[] | null){
     this.markers = markers;
   }
 
@@ -40,7 +40,7 @@ export class ReservationService {
     });
   }
 
-  getAllOngoingTrip(): Observable<IResponse> {
+  getAllOngoingTripCount(): Observable<IResponse> {
     return this.httpClient.get<IResponse>(this.baseUrl + '/admin/onGoingTrips');
   }
 
@@ -72,5 +72,9 @@ export class ReservationService {
         params,
       }
     );
+  }
+
+  getCurrentOngoingTrip(): Observable<IResponse> {
+    return this.httpClient.get<IResponse>(this.baseUrl + '/reserve/currentOngoingTrip');
   }
 }

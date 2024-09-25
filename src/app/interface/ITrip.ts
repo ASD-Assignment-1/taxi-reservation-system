@@ -1,11 +1,12 @@
 import { ReservationStatus } from "../enums/ReservationStatus.enum";
+import { IDriver } from "./IDriver";
 import { IRate } from "./IRate";
 import { IUser } from "./IUser";
 
 export interface ITrip {
   id: number;
   userDto: IUser;
-  driverDto: any;
+  driverDto: IDriver;
   reveredTime: string;
   paymentAmount: number;
   pickupLatitude:number;

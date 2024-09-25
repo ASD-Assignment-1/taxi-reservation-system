@@ -12,11 +12,11 @@ import { NON_SECURE, getEndpoint } from 'src/app/utility/constants/end-point';
 @Injectable()
 export class DriverService {
   private baseUrl = `${getEndpoint(NON_SECURE)}`;
-  private driverListPayload: IDriver[] = [];
+  private driverListPayload: IDriver[] | null = [];
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  setDriverPayload(drivers:IDriver[]){
+  setDriverPayload(drivers:IDriver[] | null){
     this.driverListPayload = drivers;
   }
 

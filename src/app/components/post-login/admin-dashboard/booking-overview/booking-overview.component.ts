@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Observable, map, take } from 'rxjs';
+import { IBookingHistory } from 'src/app/interface/IBookingHistory';
+import { IResponse } from 'src/app/interface/IResponse';
+import { ITrip } from 'src/app/interface/ITrip';
+import { MapService } from 'src/app/services/map/map.service';
 import { ReservationService } from 'src/app/services/reservation/reservation.service';
+import { showError } from 'src/app/utility/helper';
 
 @UntilDestroy()
 @Component({
@@ -18,26 +24,59 @@ export class BookingOverviewComponent implements OnInit {
     'payment',
   ];
 
-  ongoingTrips = [
-    {
-      driverName: 'John Doe',
-      driverMobile: '0771234567',
-      clientName: 'Jane Smith',
-      pickupLocation: '123 Main St',
-      dropoffLocation: '456 Elm St',
-      payment: 1500.0,
-    },
-    {
-      driverName: 'Mark Johnson',
-      driverMobile: '0717654321',
-      clientName: 'Michael Lee',
-      pickupLocation: '789 Oak St',
-      dropoffLocation: '101 Maple Ave',
-      payment: 1200.0,
-    },
-  ];
+  protected pickUpLocations: { [tripId: string]: Observable<string> } = {};
+  protected dropOffLocations: { [tripId: string]: Observable<string> } = {};
 
-  constructor(private service: ReservationService) {}
+  protected ongoingTrips : ITrip[]=[];
 
-  ngOnInit(): void {}
+  constructor(private service: ReservationService,private mapService:MapService) {
+
+  }
+
+  ngOnInit(): void {
+    this.loadOngoingTripData()
+  }
+
+  protected loadOngoingTripData() {
+    this.service.getCurrentOngoingTrip().pipe(untilDestroyed(this)).subscribe({
+      next: (res: IResponse) => {
+        this.ongoingTrips = res.data;
+      },
+      error: () => {
+        showError({
+          title: 'System Error',
+          text: 'Something Went Wrong',
+        });
+      },
+    })
+  }
+  
+  protected getPickUpLocation(trip: IBookingHistory): Observable<string> {
+    if (!this.pickUpLocations[trip.id]) {
+      this.pickUpLocations[trip.id] = this.mapService
+        .getAddress(trip.pickupLatitude, trip.pickupLongitude)
+        .pipe(
+          take(1),
+          map((res) => res.display_name),
+          untilDestroyed(this)
+        );
+    }
+
+    return this.pickUpLocations[trip.id];
+  }
+
+  protected getDropOffLocation(trip: IBookingHistory): Observable<string> {
+    if (!this.dropOffLocations[trip.id]) {
+      this.dropOffLocations[trip.id] = this.mapService
+        .getAddress(trip.dropLatitude, trip.dropLongitude)
+        .pipe(
+          take(1),
+          map((res) => res.display_name),
+          untilDestroyed(this)
+        );
+    }
+
+    return this.dropOffLocations[trip.id];
+  }
+
 }

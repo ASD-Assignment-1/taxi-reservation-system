@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime, map, switchMap } from 'rxjs';
+import { ReservationStatus } from 'src/app/enums/ReservationStatus.enum';
 import { IAdminReservation } from 'src/app/interface/IAdminReservation';
 import { IBookingHistory } from 'src/app/interface/IBookingHistory';
 import { IDriver } from 'src/app/interface/IDriver';
@@ -21,6 +22,7 @@ import { showError, showSuccess } from 'src/app/utility/helper';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
+  protected ReservationStatus = ReservationStatus;
   protected totalPassengers: number = 0;
   protected totalDrivers: number = 0;
   protected ongoingTrips: number = 0;
@@ -140,7 +142,7 @@ export class DashboardComponent {
       });
 
     this.service
-      .getAllOngoingTrip()
+      .getAllOngoingTripCount()
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (res: IResponse) => {
@@ -228,6 +230,7 @@ export class DashboardComponent {
             text: 'Reservation Successfully',
           });
           this.loadSummaryData();
+          this.loadRecentPayments();
           this.closeModal();
         },
         error: () => {

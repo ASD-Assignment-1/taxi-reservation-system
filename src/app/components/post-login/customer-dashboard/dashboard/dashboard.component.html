@@ -11,7 +11,7 @@
                 <ul>
                     <li *ngFor="let booking of latestsBookings">
                         <mat-icon>directions_car</mat-icon>
-                        <span>{{ booking.reveredTime | date:'short' }} - {{ booking.driverName }} <p><mat-icon
+                        <span>{{ booking.reveredTime | date:'short' }} - {{ booking.driverName }} <p *ngIf="booking.rating"><mat-icon
                                     *ngFor="let star of getDriverStars(booking.rating.score)"
                                     [ngClass]="star === 'filled' ? 'star-filled' : 'star-outline'">
                                     {{ star === 'filled' ? 'star' : 'star_border' }}

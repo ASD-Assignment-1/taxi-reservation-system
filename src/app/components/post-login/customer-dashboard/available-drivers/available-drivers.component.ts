@@ -21,8 +21,8 @@ import { showError, showSuccess } from 'src/app/utility/helper';
 })
 export class AvailableDriversComponent implements OnInit {
   protected user: IUser;
-  protected drivers: IDriver[] = [];
-  protected markers: any[] = [];
+  protected drivers: IDriver[] | null = [];
+  protected markers: any[] | null = [];
   protected isSummary: boolean = false;
   protected location: ILocation;
 
@@ -45,7 +45,7 @@ export class AvailableDriversComponent implements OnInit {
     this.drivers = this.driverService.getDriverPayload();
     this.markers = this.service.getMarkers();
 
-    if (this.drivers.length && this.markers.length) {
+    if (this.drivers?.length && this.markers?.length) {
       this.isSummary = true;
       this.getPickUpLocation();
       this.getDropOffLocation();
@@ -88,10 +88,10 @@ export class AvailableDriversComponent implements OnInit {
   protected calculateAmount() {
     this.service
       .calculateAmount(
-        this.markers[0].position.lat,
-        this.markers[0].position.lng,
-        this.markers[1].position.lat,
-        this.markers[1].position.lng
+        this.markers?.[0].position.lat,
+        this.markers?.[0].position.lng,
+        this.markers?.[1].position.lat,
+        this.markers?.[1].position.lng
       )
       .pipe(untilDestroyed(this))
       .subscribe({
@@ -109,7 +109,7 @@ export class AvailableDriversComponent implements OnInit {
 
   protected getPickUpLocation() {
     this.mapService
-      .getAddress(this.markers[0].position.lat, this.markers[0].position.lng)
+      .getAddress(this.markers?.[0].position.lat, this.markers?.[0].position.lng)
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (res) => {
@@ -126,7 +126,7 @@ export class AvailableDriversComponent implements OnInit {
 
   protected getDropOffLocation() {
     this.mapService
-      .getAddress(this.markers[1].position.lat, this.markers[1].position.lng)
+      .getAddress(this.markers?.[1].position.lat, this.markers?.[1].position.lng)
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (res) => {
@@ -156,10 +156,10 @@ export class AvailableDriversComponent implements OnInit {
     const reservationRequest: IUserReservation = {
       userId: this.user.id,
       driverUserName: driver.userName,
-      pickupLatitude: this.markers[0].position.lat,
-      pickupLongitude: this.markers[0].position.lng,
-      dropLatitude: this.markers[1].position.lat,
-      dropLongitude: this.markers[1].position.lng,
+      pickupLatitude: this.markers?.[0].position.lat,
+      pickupLongitude: this.markers?.[0].position.lng,
+      dropLatitude: this.markers?.[1].position.lat,
+      dropLongitude: this.markers?.[1].position.lng,
     };
 
     this.service
@@ -172,6 +172,8 @@ export class AvailableDriversComponent implements OnInit {
             text: 'Reservation Successfully',
           });
 
+          this.driverService.setDriverPayload(null);
+          this.service.setMarkers(null);
           this.router.navigate(['../booking-history'],{relativeTo:this.route});
         },
         error: () => {

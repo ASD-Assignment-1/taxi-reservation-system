@@ -112,7 +112,7 @@ export class CurrentTripComponent implements OnInit {
                   title: 'Success',
                   text: 'Trip complete successfully',
                 });
-                this.router.navigate(['../dashboard'], { relativeTo: this.route });
+                this.router.navigate(['../status-toggle'], { relativeTo: this.route });
               },
               error: () => {
                 showError({

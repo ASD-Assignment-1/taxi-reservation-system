@@ -9,6 +9,7 @@ import { showError } from 'src/app/utility/helper';
 import { MapService } from 'src/app/services/map/map.service';
 import { Observable, map, switchMap, take } from 'rxjs';
 import { UserRoles } from 'src/app/enums/UserRoles.enum';
+import { ReservationStatus } from 'src/app/enums/ReservationStatus.enum';
 
 @UntilDestroy()
 @Component({
@@ -37,7 +38,9 @@ export class TripHistoryComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (res: IResponse) => {
-          this.trips = res.data;
+          this.trips = res.data.filter(
+            (x: ITrip) => x.status === ReservationStatus.END
+          );
         },
         error: () => {
           showError({
@@ -53,9 +56,9 @@ export class TripHistoryComponent implements OnInit {
       this.pickUpLocations[trip.id] = this.mapService
         .getAddress(trip.pickupLatitude, trip.pickupLongitude)
         .pipe(
-          take(1), 
+          take(1),
           map((res) => res.display_name),
-          untilDestroyed(this) 
+          untilDestroyed(this)
         );
     }
 
@@ -67,9 +70,9 @@ export class TripHistoryComponent implements OnInit {
       this.dropOffLocations[trip.id] = this.mapService
         .getAddress(trip.dropLatitude, trip.dropLongitude)
         .pipe(
-          take(1), 
+          take(1),
           map((res) => res.display_name),
-          untilDestroyed(this) 
+          untilDestroyed(this)
         );
     }
 

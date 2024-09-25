@@ -84,6 +84,8 @@ export class BookingHistoryComponent implements OnInit {
             text: 'Make payment successfully',
           });
 
+          this.loadBookingHistory();
+
           this.tripId = trip.id;
           this.driverId = trip.driverId;
           this.driverImage = trip.driverImage;
