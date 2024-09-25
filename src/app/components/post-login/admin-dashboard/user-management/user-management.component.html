@@ -99,7 +99,7 @@
                     <p><strong>Distance:</strong> {{ trip.distance | money }} Km</p>
                 </div>
                 <div class="trip-review">
-                    <p><strong>Review Score:</strong> {{ trip.rating.score }}/5</p>
+                    <p><strong>Review Score:</strong> {{ trip.rating?.score ?? '-' }}/5</p>
                     <p><strong>Payment:</strong> LKR {{ trip.amount | money }}</p>
                 </div>
             </div>

@@ -29,7 +29,7 @@ export class DashboardComponent implements OnInit {
     this.user = this.storage.get('user-data') as unknown as IUser;
     this.customerService.getLast5ReservationById(this.user.id).pipe(untilDestroyed(this)).subscribe({
       next: (res: IResponse) => {
-        this.latestsBookings = res.data.filter((x:IBookingHistory)=>x.status===ReservationStatus.END);
+        this.latestsBookings = res.data;
       },
       error: () => {
         showError({

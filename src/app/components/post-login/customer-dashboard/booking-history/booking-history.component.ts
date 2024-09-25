@@ -102,6 +102,15 @@ export class BookingHistoryComponent implements OnInit {
       });
   }
 
+  protected addReview(trip: IBookingHistory, dialogRef: TemplateRef<any>) {
+    this.tripId = trip.id;
+    this.driverId = trip.driverId;
+    this.driverImage = trip.driverImage;
+    this.driverName = trip.driverName;
+
+    this.dialog.open(dialogRef);
+  }
+
   protected getPickUpLocation(trip: IBookingHistory): Observable<string> {
     if (!this.pickUpLocations[trip.id]) {
       this.pickUpLocations[trip.id] = this.mapService
@@ -149,7 +158,7 @@ export class BookingHistoryComponent implements OnInit {
     const rateRequest: IAddRate = {
       userID: this.user.id,
       driverID: this.driverId,
-      reservationID:this.tripId,
+      reservationID: this.tripId,
       score: this.selectedRating,
       review: this.reviewText,
     };

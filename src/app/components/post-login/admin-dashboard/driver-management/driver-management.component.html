@@ -140,7 +140,7 @@
         </div>
         <div class="driver-info">
           <p><strong>User:</strong> {{ trip.userDto.name }}</p>
-          <p><strong>Date:</strong> {{ trip.reveredTime | date:'short' }} Km</p>
+          <p><strong>Date:</strong> {{ trip.reveredTime | date:'short' }}</p>
         </div>
         <div class="trip-review">
           <p *ngIf="trip.rating"><strong>Review Score:</strong> {{ trip.rating.score }}/5</p>

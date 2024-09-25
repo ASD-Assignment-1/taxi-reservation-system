@@ -37,7 +37,7 @@ export class UserManagementComponent implements OnInit {
   protected users: IUser[] = [];
   protected selectUser: IUser;
 
-  protected tripList: any[] = [];
+  protected tripList: IBookingHistory[] = [];
 
   protected pickUpLocations: { [tripId: string]: Observable<string> } = {};
   protected dropOffLocations: { [tripId: string]: Observable<string> } = {};
