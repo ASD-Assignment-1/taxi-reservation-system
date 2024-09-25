@@ -9,15 +9,15 @@ import { NON_SECURE, getEndpoint } from 'src/app/utility/constants/end-point';
 @Injectable()
 export class ReservationService {
   private baseUrl = `${getEndpoint(NON_SECURE)}`;
-  protected markers: any[] | null= [];
+  protected markers: any[] | null = [];
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  setMarkers(markers:any[] | null){
+  setMarkers(markers: any[] | null) {
     this.markers = markers;
   }
 
-  getMarkers(){
+  getMarkers() {
     return this.markers;
   }
 
@@ -66,15 +66,27 @@ export class ReservationService {
       latitude2: toLat,
       longitude2: toLng,
     };
+    return this.httpClient.get<IResponse>(this.baseUrl + '/user/getAmount', {
+      params,
+    });
+  }
+
+  getCurrentOngoingTrip(): Observable<IResponse> {
     return this.httpClient.get<IResponse>(
-      this.baseUrl + '/user/getAmount',
+      this.baseUrl + '/reserve/currentOngoingTrip'
+    );
+  }
+
+  getPaymentDetails(from: string, to: string): Observable<IResponse> {
+    const params = {
+      fromDate: from,
+      toDate: to,
+    };
+    return this.httpClient.get<IResponse>(
+      this.baseUrl + '/admin/paymentDetails',
       {
         params,
       }
     );
-  }
-
-  getCurrentOngoingTrip(): Observable<IResponse> {
-    return this.httpClient.get<IResponse>(this.baseUrl + '/reserve/currentOngoingTrip');
   }
 }

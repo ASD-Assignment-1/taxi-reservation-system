@@ -18,7 +18,7 @@
                 <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
                 <mat-datepicker #toDatePicker></mat-datepicker>
             </mat-form-field>
-            <button mat-raised-button color="primary" type="submit">Search</button>
+            <button mat-raised-button color="primary" [disabled]="form.invalid" type="submit">Search</button>
         </form>
     </div>
    
@@ -57,7 +57,7 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> Actions </th>
                 <td mat-cell *matCellDef="let data">
-                    <button mat-icon-button color="primary" (click)="downloadPaymentReport()">
+                    <button mat-icon-button color="primary" (click)="downloadPaymentReport(data)">
                         <mat-icon>download</mat-icon>
                     </button>
                 </td>

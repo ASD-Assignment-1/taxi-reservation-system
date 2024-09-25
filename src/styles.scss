@@ -11,3 +11,7 @@ body {
     display: none !important;
 }
 
+.cdk-global-scrollblock {
+    overflow-y: unset;
+}
+

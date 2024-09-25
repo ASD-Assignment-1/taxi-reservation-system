@@ -23,6 +23,8 @@
     "@angular/platform-browser-dynamic": "^16.1.0",
     "@angular/router": "^16.1.0",
     "@ngneat/until-destroy": "^10.0.0",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.3",
     "leaflet": "^1.9.4",
     "ngx-owl-carousel-o": "^18.0.0",
     "rxjs": "~7.8.0",

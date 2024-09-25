@@ -73,7 +73,7 @@ export class DriverManagementComponent implements OnInit {
       next: (res: IResponse) => {
         this.drivers = res.data;
       },
-      error: (err: HttpErrorResponse) => {
+      error: () => {
         showError({
           title: 'System Error',
           text: 'Something Went Wrong',
