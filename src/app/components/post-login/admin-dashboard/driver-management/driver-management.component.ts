@@ -71,6 +71,13 @@ export class DriverManagementComponent implements OnInit {
     .pipe(untilDestroyed(this))
     .subscribe({
       next: (res: IResponse) => {
+        if (!res.data.length) {
+          showError({
+            title: 'Oops',
+            text: 'Currently,There is no any registered drivers',
+          });
+          return;
+        }
         this.drivers = res.data;
       },
       error: () => {

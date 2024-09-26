@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DriverStatus } from 'src/app/enums/DriverStatus.enum';
 import { IDriver } from 'src/app/interface/IDriver';
+import { ILocation } from 'src/app/interface/ILocation';
 import { IResponse } from 'src/app/interface/IResponse';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { DriverService } from 'src/app/services/driver/driver.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { showError, showSuccess } from 'src/app/utility/helper';
@@ -17,6 +19,7 @@ export class StatusToggleComponent implements OnInit {
   protected status: boolean;
   protected currentStatus: DriverStatus;
   protected driver: IDriver;
+  protected location: ILocation;
 
   protected today: number;
   protected week: number;
@@ -47,16 +50,47 @@ export class StatusToggleComponent implements OnInit {
 
   constructor(
     private service: DriverService,
-    private storage: StorageService
+    private storage: StorageService,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
     this.driver = this.storage.get('driver-data') as unknown as IDriver;
-    this.currentStatus = this.driver.status;
-    this.currentStatus === DriverStatus.AVAILABLE
-      ? (this.status = true)
-      : (this.status = false);
+
     this.loadEarningsData();
+    this.loadDriverById();
+    this.getCurrentLocation();
+  }
+
+  getCurrentLocation() {
+    this.authService
+    .getLocation()
+    .pipe(untilDestroyed(this))
+    .subscribe({
+      next: (res) => {
+        this.location = res;
+      },
+    });
+  }
+
+  protected loadDriverById() {
+    this.service
+      .getDriverById(this.driver.id)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          this.currentStatus = res.data.status;
+          this.currentStatus === DriverStatus.AVAILABLE
+            ? (this.status = true)
+            : (this.status = false);
+        },
+        error: () => {
+          showError({
+            title: 'System Error',
+            text: 'Something Went Wrong',
+          });
+        },
+      });
   }
 
   protected loadEarningsData() {
@@ -111,7 +145,7 @@ export class StatusToggleComponent implements OnInit {
       ? DriverStatus.AVAILABLE
       : DriverStatus.BUSY;
     this.service
-      .changeStatus(this.driver.id, this.currentStatus)
+      .changeStatus(this.driver.id, this.currentStatus,this.location.lat,this.location.lng)
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (res: IResponse) => {
@@ -119,7 +153,7 @@ export class StatusToggleComponent implements OnInit {
             title: 'Success',
             text: 'Your status changed successfully',
           });
-          this.driver = { ...this.driver, status:this.currentStatus };
+          this.driver = { ...this.driver, status: this.currentStatus };
           this.storage.set('driver-data', this.driver);
         },
         error: () => {

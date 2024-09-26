@@ -6,7 +6,9 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DriverStatus } from 'src/app/enums/DriverStatus.enum';
 import { IChangePassword } from 'src/app/interface/IChangePassword';
 import { IDriver } from 'src/app/interface/IDriver';
+import { ILocation } from 'src/app/interface/ILocation';
 import { IResponse } from 'src/app/interface/IResponse';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { DriverService } from 'src/app/services/driver/driver.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { showError, showSuccess } from 'src/app/utility/helper';
@@ -24,6 +26,7 @@ export class SettingsComponent implements OnInit {
   protected isAvailable = true;
 
   protected driver: IDriver;
+  protected location: ILocation;
 
   protected imageURL: string = 'assets/images/empty-user.jpg';
 
@@ -31,6 +34,7 @@ export class SettingsComponent implements OnInit {
     private fb: FormBuilder,
     private storage: StorageService,
     private service: DriverService,
+    private authService: AuthService,
     private router: Router
   ) {
     this.settingsForm = this.fb.group({
@@ -49,10 +53,8 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.driver = this.storage.get('driver-data') as unknown as IDriver;
-
-    this.driver.status === DriverStatus.AVAILABLE
-      ? (this.isAvailable = true)
-      : (this.isAvailable = false);
+    this.getCurrentLocation();
+    this.loadDriverById();
 
     this.settingsForm.patchValue({
       name: this.driver.name,
@@ -62,6 +64,36 @@ export class SettingsComponent implements OnInit {
     });
 
     this.imageURL = this.driver.profileImage;
+  }
+
+  getCurrentLocation() {
+    this.authService
+    .getLocation()
+    .pipe(untilDestroyed(this))
+    .subscribe({
+      next: (res) => {
+        this.location = res;
+      },
+    });
+  }
+
+  protected loadDriverById() {
+    this.service
+      .getDriverById(this.driver.id)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (res: IResponse) => {
+          res.data.status === DriverStatus.AVAILABLE
+            ? (this.isAvailable = true)
+            : (this.isAvailable = false);
+        },
+        error: () => {
+          showError({
+            title: 'System Error',
+            text: 'Something Went Wrong',
+          });
+        },
+      });
   }
 
   protected onEditClick() {
@@ -179,7 +211,9 @@ export class SettingsComponent implements OnInit {
     this.service
       .changeStatus(
         this.driver.id,
-        this.isAvailable ? DriverStatus.AVAILABLE : DriverStatus.BUSY
+        this.isAvailable ? DriverStatus.AVAILABLE : DriverStatus.BUSY,
+        this.location.lat,
+        this.location.lng
       )
       .pipe(untilDestroyed(this))
       .subscribe({

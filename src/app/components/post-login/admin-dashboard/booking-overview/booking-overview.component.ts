@@ -40,6 +40,13 @@ export class BookingOverviewComponent implements OnInit {
   protected loadOngoingTripData() {
     this.service.getCurrentOngoingTrip().pipe(untilDestroyed(this)).subscribe({
       next: (res: IResponse) => {
+        if (!res.data.length) {
+          showError({
+            title: 'Oops',
+            text: 'Currently,There is no any ongoing trips',
+          });
+          return;
+        }
         this.ongoingTrips = res.data;
       },
       error: () => {
