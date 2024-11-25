@@ -88,8 +88,8 @@ export class TripHistoryComponent implements OnInit {
   }
 
   protected getGoogleMapsUrl(trip: any) {
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${trip.pickupLatitude},${trip.pickupLongitude}&destination=${trip.dropoffLatitude},${trip.dropoffLongitude}`;
-
+    
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${trip.pickupLatitude},${trip.pickupLongitude}&destination=${trip.dropLatitude},${trip.dropLongitude}`;
     window.open(url, '_blank');
   }
 }

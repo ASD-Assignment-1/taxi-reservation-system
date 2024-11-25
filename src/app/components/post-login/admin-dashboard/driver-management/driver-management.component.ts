@@ -191,7 +191,7 @@ export class DriverManagementComponent implements OnInit {
           });
           return;
         }
-        //need to implement
+        
         this.tripList = res.data;
         this.dialog.open(dialogRef);
       },

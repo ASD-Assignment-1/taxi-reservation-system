@@ -17,7 +17,7 @@
 
             <div class="trip-details">
                 <img [src]="trip.driverImage" alt="Driver Image" class="driver-image" />
-                <p *ngIf="trip.rating"><strong>Driver:</strong><mat-icon
+                <p *ngIf="trip.rating"><strong>Review:</strong><mat-icon
                         *ngFor="let star of getDriverStars(trip.rating.score)"
                         [ngClass]="star === 'filled' ? 'star-filled' : 'star-outline'">
                         {{ star === 'filled' ? 'star' : 'star_border' }}

@@ -129,6 +129,6 @@ export class CurrentTripComponent implements OnInit {
   getGoogleMapsUrl(): string {
     const { pickupLongitude, pickupLatitude, dropLatitude, dropLongitude } =
       this.trip;
-    return `https://www.google.com/maps/dir/?api=1&origin=${pickupLongitude},${pickupLatitude}&destination=${dropLatitude},${dropLongitude}`;
+    return `https://www.google.com/maps/dir/?api=1&origin=${pickupLatitude},${pickupLongitude}&destination=${dropLatitude},${dropLongitude}`;
   }
 }
